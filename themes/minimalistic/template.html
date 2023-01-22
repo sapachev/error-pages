@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}">
+  <head>
+    <title>{{ code }} {{ name }}</title>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Pavel Sapachev" />
+
+    <link href="assets/css/main.css" rel="preload" as="style" />
+
+    <link href="https://fonts.googleapis.com/css?family=Oxygen:400,700" rel="stylesheet" type="text/css" />
+    <link href="assets/css/main.css" rel="stylesheet" type="text/css" />
+  </head>
+
+  <body class="bg-myfantasy">
+    <div class="wrapper grid md:items-center">
+      <div>{{ code }}</div>
+      <div>{{ name }}</div>
+      <div>{{ message }}</div>
+      <div>{{ apology }}</div>
+      <a href="javascript:window.history.back();">{{ go-back }}</a>
+    </div>
+
+    <a href="https://github.com/sapachev/error-pages" target="_blank">{{ comment }}</a>
+  </body>
+</html>
