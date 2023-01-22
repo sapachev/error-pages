@@ -4,7 +4,7 @@ import { access, cp, readFile, readdir, rm, mkdir, writeFile } from 'fs/promises
 import { render } from 'mustache';
 
 import { DEFAULTS, SRC_CODE_PATTERN, TAILWIND_STYLE } from './lib/constants';
-import { Config, SatusCode, TemplateVariables } from "./lib/interfaces";
+import { Config, SatusCode, SnippetVariables, TemplateVariables } from "./lib/interfaces";
 
 async function compile(config: Config) {
   try {
@@ -36,9 +36,19 @@ async function compile(config: Config) {
         Array.from(codesVars).map(
           ([code, codeVars]) => renderPage(template, {...vars, ...codeVars, code})
         )
-      );
+      ).then(() => {
+        console.log(`INFO: ${codesVars.size} pages were successfully created`);
+      });
 
-      console.log(`INFO: ${codesVars.size} pages was successfully created`);
+      await readdir(`${DEFAULTS.SNIPPETS}/`)
+      .then(files => {
+        return Promise.all(
+          files.map(async (file) => {
+            const snippet = await readFile(`${DEFAULTS.SNIPPETS}/${file}`).then(String);
+            return renderSnippet(file, snippet, { locale: config.locale, codes: Array.from(codesVars.keys()) })
+          })
+        )
+      })
     }
     else {
       throw new Error('No source data to render error pages');
@@ -51,8 +61,8 @@ async function compile(config: Config) {
 async function execTailwind(config: Config) {
   try {
     if (config.tailwind) {
-      const input = `${DEFAULTS.THEMES}/${config.theme}/assets/css/${DEFAULTS.TAILWIND_ENTRY}`;
-      const output = `${DEFAULTS.DIST}/${config.locale}/assets/css/${DEFAULTS.TAILWIND_ENTRY.replace('.tcss', '.css')}`;
+      const input = `${DEFAULTS.THEMES}/${config.theme}/${DEFAULTS.ASSETS}/css/${DEFAULTS.TAILWIND_ENTRY}`;
+      const output = `${DEFAULTS.DIST}/${config.locale}/${DEFAULTS.ASSETS}/css/${DEFAULTS.TAILWIND_ENTRY.replace('.tcss', '.css')}`;
       const cmd = `INPUT="${input}" OUTPUT="${output}" npm run build:tailwind`;
 
       console.log(`INFO: build Tailwind CSS styles`);
@@ -90,7 +100,24 @@ async function renderPage(template: string, vars: TemplateVariables) {
 
     console.log(`INFO: render '${path}' page`);
     await writeFile(path, render(template, vars), { flag: 'w+' });
+  } catch (err) {
+    throw err;
+  }
+}
 
+async function renderSnippet(name: string, template: string, vars: SnippetVariables) {
+  try {
+    if (!vars.codes) {
+      throw new Error('No codes list to render config snippet');
+    } else  if (!vars.locale) {
+      throw new Error('No locale variable to render config snippet');
+    }
+
+    const path = `${DEFAULTS.DIST}/${vars.locale}/${name}`;
+
+    console.log(`INFO: render '${path}' config snippet`);
+    await writeFile(path, render(template, vars), { flag: 'w+' });
+    console.log(`INFO: config snippet '${name}' was successfully created`);
   } catch (err) {
     throw err;
   }
@@ -127,7 +154,7 @@ async function copyAssets(config: Config) {
   try {
     console.log(`INFO: copying assets to build directory '${DEFAULTS.DIST}'`);
 
-    const path = `${DEFAULTS.THEMES}/${config.theme}/assets`;
+    const path = `${DEFAULTS.THEMES}/${config.theme}/${DEFAULTS.ASSETS}`;
 
     let exists = false;
     try {
@@ -138,7 +165,7 @@ async function copyAssets(config: Config) {
     if (exists) {
       await cp(
           path,
-          `${DEFAULTS.DIST}/${config.locale}/assets`,
+          `${DEFAULTS.DIST}/${config.locale}/${DEFAULTS.ASSETS}`,
           {
             recursive: true,
             // Skip Tailwind styles to copy
