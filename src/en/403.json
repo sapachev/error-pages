@@ -1,4 +1,4 @@
 {
   "name": "Forbidden",
-  "message": "The server understood the request but refuses to authorize it."
+  "message": "You are not allowed to access this page according to the server settings. You can also verify the address you have just tried to open."
 }
