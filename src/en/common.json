@@ -1,5 +1,7 @@
 {
   "apology": "We are sorry for the inconvenience.",
   "comment": "Created with Error Pages",
-  "go-back": "Go back"
+  "comment-aria": "Visit Error Pages repository",
+  "go-back": "Go back",
+  "go-back-aria": "Return to previous page"
 }

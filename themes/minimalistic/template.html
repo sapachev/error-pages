@@ -8,20 +8,32 @@
     <meta name="author" content="Pavel Sapachev" />
 
     <link href="/%40assets/css/main.css" rel="preload" as="style" />
-
-    <link href="https://fonts.googleapis.com/css?family=Oxygen:400,700" rel="stylesheet" type="text/css" />
     <link href="/%40assets/css/main.css" rel="stylesheet" type="text/css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:wght@400;600&display=swap" rel="stylesheet">
   </head>
 
-  <body class="bg-myfantasy">
-    <div class="wrapper grid md:items-center">
-      <div>{{ code }}</div>
-      <div>{{ name }}</div>
-      <div>{{ message }}</div>
-      <div>{{ apology }}</div>
-      <a href="javascript:window.history.back();">{{ go-back }}</a>
-    </div>
+  <body class="bg-slate-200 text-slate-700">
+    <div class="wrapper grid gap-4 items-center grid-rows-centered justify-items-center py-4">
+      <div class="grid gap-8 items-center w-full sm:w-min">
+        <header class="grid grid-flow-row sm:grid-flow-col grid-cols-centered gap-4 items-center justify-items-center">
+          <h1 class="text-9xl font-semibold">{{ code }}</h1>
+          <h2 class="text-5xl text-center sm:text-left sm:w-max sm:max-w-xs break-words">{{ name }}</h2>
+        </header>
 
-    <a href="https://github.com/sapachev/error-pages" target="_blank">{{ comment }}</a>
+        <main class="text-xl text-center mx-4 sm:-mx-4">
+          <p class="mb-8">{{ message }}</p>
+          <p>{{ apology }}</p>
+        </main>
+
+        <button onclick="window.history.back()" class="justify-self-center border-solid border-2 border-slate-700 px-4 py-2 text-slate-200 bg-slate-700 hover:bg-slate-300 hover:text-slate-700 mb-4 focus:ring-2 focus:ring-offset-4 focus:ring-offset-slate-200 focus:ring-slate-700 focus-visible:outline-none" aria-label="{{ go-back-aria }}" title="{{ go-back-aria }}">{{ go-back }}</button>
+      </div>
+
+      <footer>
+        <a href="https://github.com/sapachev/error-pages" target="_blank" class="text-slate-500 focus:ring-2 focus:ring-offset-4 focus:ring-offset-slate-200 focus:ring-slate-700 focus-visible:outline-none" aria-label="{{ comment-aria }}" title="{{ comment-aria }}">{{ comment }}</a>
+      </footer>
+    </div>
   </body>
 </html>

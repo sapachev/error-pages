@@ -1,11 +1,11 @@
 {
   "name": "error-pages",
   "version": "0.0.1",
-  "description": "Lightweight tool to create own static HTTP Error Pages in minimalistic responsive and accessible design features and customization support including localization",
+  "description": "Lightweight tool to create static HTTP Error Pages in minimalistic adaptive and accessible design with customization and localization support",
   "main": "index.ts",
   "scripts": {
     "build": "npx ts-node index.ts",
-    "build:tailwind": "npx tailwindcss -i $INPUT -o $OUTPUT",
+    "build:tailwind": "npx tailwindcss -i $INPUT -o $OUTPUT -m",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Pavel Sapachev",

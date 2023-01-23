@@ -1,10 +1,10 @@
 ## Custom HTTP Error Pages
 
-Lightweight tool to create own static HTTP Error Pages in minimalistic responsive and accessible design features and customization support including localization.
+Lightweight tool to create static HTTP Error Pages in minimalistic adaptive and accessible design with customization and localization support.
 
 # Features
 
-* Static pages with simple design
+* Static pages with simple and responsive design
 * Lightweight and fast running
 * Extensibility
 * Customization
