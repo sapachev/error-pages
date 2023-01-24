@@ -12,6 +12,20 @@ Lightweight tool to create static HTTP Error Pages in minimalistic adaptive and 
 * Accessibility (a11y)
 * Built-in web-server config generator (Nginx)
 
+![Screenshot](https://sapachev.com/share/error-pages/screenshot.png)
+
+# Demo
+
+* [400 Bad Request](https://sapachev.com/error-pages/bad-request)
+* [401 Unauthorized](https://sapachev.com/error-pages/unauthorized)
+* [403 Forbidden](https://sapachev.com/error-pages/forbidden)
+* [404 Not Found](https://sapachev.com/error-pages/not-found)
+* [410 Gone](https://sapachev.com/error-pages/gone)
+* [500 Internal Server Error](https://sapachev.com/error-pages/internal-server-error)
+* [502 Bad Gateway](https://sapachev.com/error-pages/bad-gateway)
+* [503 Service Unavailable](https://sapachev.com/error-pages/service-unavailable)
+* [504 Gateway Timeout](https://sapachev.com/error-pages/gateway-timeout)
+
 
 # How to use
 
