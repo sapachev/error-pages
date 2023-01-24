@@ -5,4 +5,4 @@ exports.theme = {
       centered: "1fr auto",
     },
   },
-}
+};

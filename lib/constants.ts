@@ -1,5 +1,5 @@
-import { Defaults } from './interfaces.js';
-import { DefaultPaths } from './_constants.js';
+import { Defaults } from "./interfaces.js";
+import { DefaultPaths } from "./_constants.js";
 
 export const DEFAULTS: Defaults = {
   ASSETS: DefaultPaths.ASSETS,
@@ -9,7 +9,7 @@ export const DEFAULTS: Defaults = {
   SNIPPETS: DefaultPaths.SNIPPETS,
   THEMES: DefaultPaths.THEMES,
   TAILWIND_ENTRY: DefaultPaths.TAILWIND_ENTRY,
-}
+};
 
 export const SRC_CODE_PATTERN = /^[0-9]{3}(?=\.json$)/i;
 export const TAILWIND_STYLE = /\.tcss$/i;
