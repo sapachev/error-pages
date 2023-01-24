@@ -7,8 +7,10 @@ import { DEFAULTS, SRC_CODE_PATTERN, TAILWIND_STYLE } from "./lib/constants";
 import { Config, SatusCode, SnippetVariables, TemplateVariables } from "./lib/interfaces";
 
 async function compile(config: Config) {
+  const pkg = await readJson(DEFAULTS.PACKAGE);
   let vars: TemplateVariables = {
     locale: config.locale,
+    version: pkg.version,
   };
 
   const template = await readFile(`${DEFAULTS.THEMES}/${config.theme}/template.html`).then(String);

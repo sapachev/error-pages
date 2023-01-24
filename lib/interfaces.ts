@@ -1,11 +1,12 @@
 export interface Defaults {
   ASSETS: string;
   CONFIG: string;
-  SRC: string;
   DIST: string;
+  PACKAGE: string;
   SNIPPETS: string;
-  THEMES: string;
+  SRC: string;
   TAILWIND_ENTRY: string;
+  THEMES: string;
 }
 
 export interface Config {
@@ -18,6 +19,7 @@ export type SatusCode = number;
 
 export interface TemplateVariables {
   locale: string;
+  version: string;
   [key: string]: string | number;
 }
 
