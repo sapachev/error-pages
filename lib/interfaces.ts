@@ -25,5 +25,4 @@ export interface TemplateVariables {
 
 export interface SnippetVariables {
   codes: SatusCode[];
-  locale: string;
 }

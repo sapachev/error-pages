@@ -13,4 +13,3 @@ export const DEFAULTS: Defaults = {
 };
 
 export const SRC_CODE_PATTERN = /^[0-9]{3}(?=\.json$)/i;
-export const TAILWIND_STYLE = /\.tcss$/i;
