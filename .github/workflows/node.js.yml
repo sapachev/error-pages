@@ -17,10 +17,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Prepare Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run lint
+    - name: Install Dependencies
+      run: npm ci
+    - name: Run Linter Check
+      run: npm run lint
+    - name: Run Tests Check
+      run: npm run test
