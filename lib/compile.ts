@@ -1,5 +1,6 @@
 import { readFile, readdir } from "fs/promises";
 import { container } from "tsyringe";
+import { PackageId } from "typescript";
 
 import { DEFAULTS, SRC_CODE_PATTERN } from "./constants";
 import { FileSystemHelper } from "./FileSystemHelper";
@@ -9,7 +10,7 @@ import { renderPage, renderSnippet } from "./render";
 export async function compile(config: Config) {
   const fsHelper = container.resolve(FileSystemHelper);
 
-  const pkg = await fsHelper.readJson(DEFAULTS.PACKAGE);
+  const pkg = await fsHelper.readJson<PackageId>(DEFAULTS.PACKAGE);
   let vars: TemplateVariables = {
     locale: config.locale,
     version: pkg.version,

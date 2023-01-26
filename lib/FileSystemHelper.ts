@@ -42,12 +42,12 @@ export class FileSystemHelper {
     await this.fs.mkdir(path, { recursive: true });
   }
 
-  async readJson(path: string): Promise<object> {
+  async readJson<T>(path: string): Promise<T> {
     return await this.fs.readFile(path).then(String).then(JSON.parse);
   }
 
   async readConfig(path: string): Promise<Config> {
-    const config = await this.readJson(path);
+    const config = await this.readJson<Config>(path);
 
     // Check mandatory config properties
     MANDATORY_CONFIG_PROPS.forEach((prop) => {
