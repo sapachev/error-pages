@@ -6,23 +6,27 @@ import { Messages } from "./Messages";
 import { MessagesEnum } from "../messages";
 import { MANDATORY_CONFIG_PROPS } from "./constants";
 import { sourceStyleFilter } from "./style";
+import { Logger } from "./Logger";
 
 @injectable()
 @singleton()
 export class FileSystemHelper {
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  constructor(@inject("fs/promise") private fs: any) {}
+  constructor(
+    // TODO: try to fix fs/promise typing
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    @inject("fs/promise") private fs: any,
+    @inject("logger") private logger: Logger
+  ) {}
 
   async copyAssets(src: string, dest: string): Promise<void> {
-    console.log(Messages.info(MessagesEnum.COPYING_ASSETS));
-
     if (await this.ensure(src)) {
+      this.logger.print(Messages.info(MessagesEnum.COPYING_ASSETS));
       await this.fs.cp(src, dest, {
         recursive: true,
         filter: sourceStyleFilter,
       });
     } else {
-      console.log(Messages.info(MessagesEnum.NO_ASSETS_TO_COPY));
+      this.logger.print(Messages.info(MessagesEnum.NO_ASSETS_TO_COPY));
     }
   }
 
