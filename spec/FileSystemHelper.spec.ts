@@ -11,7 +11,7 @@ describe("class FileSystemHelper", async () => {
   const mockObj = { prop: "val" };
   const mockConfig: Config = { locale: "en", tailwind: true, theme: "minimalistic" };
 
-  const registerHelper = (prop: any, value: any): FileSystemHelper => {
+  const registerHelper = (prop: string, value: unknown): FileSystemHelper => {
     container.register("fs/promise", {
       useValue: {
         [prop]: () => Promise.resolve(value),
@@ -25,7 +25,9 @@ describe("class FileSystemHelper", async () => {
   });
 
   describe("copyAssets()", async () => {
-    it("should be resolved with mocked object", async () => {});
+    it("should be resolved with mocked object", async () => {
+      // TODO
+    });
   });
 
   describe("readJson()", async () => {

@@ -10,6 +10,7 @@ import { sourceStyleFilter } from "./style";
 @injectable()
 @singleton()
 export class FileSystemHelper {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   constructor(@inject("fs/promise") private fs: any) {}
 
   async copyAssets(src: string, dest: string): Promise<void> {
@@ -41,7 +42,7 @@ export class FileSystemHelper {
     await this.fs.mkdir(path, { recursive: true });
   }
 
-  async readJson(path: string): Promise<any> {
+  async readJson(path: string): Promise<object> {
     return await this.fs.readFile(path).then(String).then(JSON.parse);
   }
 

@@ -1,5 +1,4 @@
 import { render } from "mustache";
-import { injectable } from "tsyringe";
 
 import { AnyVariables } from "./interfaces";
 
