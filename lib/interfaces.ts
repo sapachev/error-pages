@@ -15,8 +15,6 @@ export interface Config {
   theme: string;
 }
 
-export interface NpmPackage {}
-
 export type SatusCode = number;
 
 export interface AnyVariables {
