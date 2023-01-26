@@ -1,12 +1,15 @@
 import { readFile, readdir } from "fs/promises";
+import { container } from "tsyringe";
 
 import { DEFAULTS, SRC_CODE_PATTERN } from "./constants";
+import { FileSystemHelper } from "./FileSystemHelper";
 import { Config, SatusCode, TemplateVariables } from "./interfaces";
 import { renderPage, renderSnippet } from "./render";
-import { readJson } from "./fs";
 
 export async function compile(config: Config) {
-  const pkg = await readJson(DEFAULTS.PACKAGE);
+  const fsHelper = container.resolve(FileSystemHelper);
+
+  const pkg = await fsHelper.readJson(DEFAULTS.PACKAGE);
   let vars: TemplateVariables = {
     locale: config.locale,
     version: pkg.version,
@@ -18,7 +21,7 @@ export async function compile(config: Config) {
   await readdir(`${DEFAULTS.SRC}/${config.locale}/`).then((files) => {
     return Promise.all(
       files.map(async (file) => {
-        const srcVars: TemplateVariables = await readJson(`${DEFAULTS.SRC}/${config.locale}/${file}`);
+        const srcVars: TemplateVariables = await fsHelper.readJson(`${DEFAULTS.SRC}/${config.locale}/${file}`);
         const match = file.match(SRC_CODE_PATTERN);
         if (match) {
           codesVars.set(Number(match[0]), srcVars);

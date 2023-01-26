@@ -1,14 +1,24 @@
+import "reflect-metadata";
+
+import * as fs from "fs/promises";
+import { container } from "tsyringe";
+
 import { DEFAULTS } from "./lib/constants";
-import { copyAssets, flush, readConfig } from "./lib/fs";
 import { compile } from "./lib/compile";
 import { buildTailwind } from "./lib/style";
+import { FileSystemHelper } from "./lib/FileSystemHelper";
 
-readConfig(DEFAULTS.CONFIG)
+container.register("fs/promise", { useValue: fs });
+
+container
+  .resolve(FileSystemHelper)
+  .readConfig(DEFAULTS.CONFIG)
   .then(async (config) => {
-    await flush(DEFAULTS.DIST);
+    const fsHelper = container.resolve(FileSystemHelper);
+    await fsHelper.flush(DEFAULTS.DIST);
     await compile(config);
     await buildTailwind(config);
-    await copyAssets(`${DEFAULTS.THEMES}/${config.theme}/${DEFAULTS.ASSETS}`, `${DEFAULTS.DIST}/${DEFAULTS.ASSETS}`);
+    await fsHelper.copyAssets(`${DEFAULTS.THEMES}/${config.theme}/${DEFAULTS.ASSETS}`, `${DEFAULTS.DIST}/${DEFAULTS.ASSETS}`);
   })
   .catch((err) => {
     console.error(`

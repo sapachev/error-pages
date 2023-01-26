@@ -10,17 +10,20 @@ export interface Defaults {
 }
 
 export interface Config {
+  locale: string;
   tailwind: boolean;
   theme: string;
-  locale: string;
 }
 
 export type SatusCode = number;
 
-export interface TemplateVariables {
+export interface AnyVariables {
+  [key: string]: string | number;
+}
+
+export interface TemplateVariables extends AnyVariables {
   locale: string;
   version: string;
-  [key: string]: string | number;
 }
 
 export interface SnippetVariables {

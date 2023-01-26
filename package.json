@@ -9,25 +9,32 @@
     "lint": "eslint .",
     "prettier": "prettier --check --ignore-unknown .",
     "prettier:fix": "prettier --write --ignore-unknown .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx ts-node ./node_modules/jasmine/bin/jasmine --config=./jasmine.json"
   },
   "author": "Pavel Sapachev",
   "repository": "https://github.com/sapachev/error-pages",
   "license": "ISC",
   "dependencies": {
     "@types/mustache": "^4.2.2",
+    "@wessberg/di": "^2.1.0",
     "mustache": "^4.2.0",
+    "reflect-metadata": "^0.1.13",
     "tailwindcss": "^3.2.4",
     "ts-node": "^10.9.1",
+    "tsyringe": "^4.7.0",
     "typescript": "^4.9.4"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
+    "@types/jasmine": "^4.3.1",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
     "eslint": "^8.32.0",
     "husky": "^8.0.0",
+    "jasmine": "^4.5.0",
+    "jasmine-spec-reporter": "^7.0.0",
+    "jasmine-ts": "^0.4.0",
     "lint-staged": "^13.1.0",
     "prettier": "^2.8.3",
     "prettier-plugin-tailwindcss": "^0.2.1",
