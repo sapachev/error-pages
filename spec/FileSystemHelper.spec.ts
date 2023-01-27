@@ -12,9 +12,6 @@ import { MessagesEnum } from "../messages";
 describe("class FileSystemHelper", async () => {
   let testContainer: Container;
 
-  const mockObj = { prop: "val" };
-  const mockConfig: Config = { locale: "en", tailwind: true, theme: "minimalistic" };
-
   beforeEach(() => {
     testContainer = new Container({ defaultScope: "Singleton" });
     testContainer.bind<IFileSystemWrapper>(DI_TOKENS.FS).to(MockFS);
@@ -54,17 +51,25 @@ describe("class FileSystemHelper", async () => {
   });
 
   describe("ensure()", async () => {
+    beforeEach(() => {
+      testContainer.unbind(DI_TOKENS.FS);
+    });
+
     it("should be resolved to 'true' value", async () => {
-      const fsWrapper = testContainer.get<IFileSystemWrapper>(DI_TOKENS.FS);
-      fsWrapper.access = jasmine.createSpy("access", fsWrapper.access).and.returnValue(null);
+      const fsMock = { access: () => null };
+      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
       await expectAsync(fsHelper.ensure("")).toBeResolvedTo(true);
     });
 
     it("should be resolved to 'false' value", async () => {
-      const fsWrapper = testContainer.get<IFileSystemWrapper>(DI_TOKENS.FS);
-      fsWrapper.access = jasmine.createSpy("access", fsWrapper.access).and.throwError("");
+      const fsMock = {
+        access: () => {
+          throw new Error();
+        },
+      };
+      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
       await expectAsync(fsHelper.ensure("")).toBeResolvedTo(false);
@@ -91,12 +96,32 @@ describe("class FileSystemHelper", async () => {
     });
   });
 
+  describe("readFile()", async () => {
+    const mockStr = "my string";
+
+    beforeEach(() => {
+      testContainer.unbind(DI_TOKENS.FS);
+    });
+
+    it("should be resolved to mocked string", async () => {
+      const fsMock = { readFile: () => Promise.resolve(Buffer.from(mockStr)) };
+      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
+
+      const fsHelper = testContainer.resolve(FileSystemHelper);
+      await expectAsync(fsHelper.readFile("path")).toBeResolvedTo(mockStr);
+    });
+  });
+
   describe("readJson()", async () => {
+    const mockObj = { prop: "val" };
+
+    beforeEach(() => {
+      testContainer.unbind(DI_TOKENS.FS);
+    });
+
     it("should be resolved to mocked object", async () => {
-      const fsWrapper = testContainer.get<IFileSystemWrapper>(DI_TOKENS.FS);
-      fsWrapper.readFile = jasmine
-        .createSpy("readFile", fsWrapper.readFile)
-        .and.returnValue(Promise.resolve(Buffer.from(JSON.stringify(mockObj))));
+      const fsMock = { readFile: () => Promise.resolve(Buffer.from(JSON.stringify(mockObj))) };
+      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
       await expectAsync(fsHelper.readJson("path")).toBeResolvedTo(mockObj);
@@ -104,11 +129,15 @@ describe("class FileSystemHelper", async () => {
   });
 
   describe("readConfig()", async () => {
+    const mockConfig: Config = { locale: "en", tailwind: true, theme: "minimalistic" };
+
+    beforeEach(() => {
+      testContainer.unbind(DI_TOKENS.FS);
+    });
+
     it("should be resolved to mocked config", async () => {
-      const fsWrapper = testContainer.get<IFileSystemWrapper>(DI_TOKENS.FS);
-      fsWrapper.readFile = jasmine
-        .createSpy("readFile", fsWrapper.readFile)
-        .and.returnValue(Promise.resolve(Buffer.from(JSON.stringify(mockConfig))));
+      const fsMock = { readFile: () => Promise.resolve(Buffer.from(JSON.stringify(mockConfig))) };
+      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
       await expectAsync(fsHelper.readConfig("path")).toBeResolvedTo(mockConfig);
@@ -117,10 +146,8 @@ describe("class FileSystemHelper", async () => {
     it("should be rejected without mandatory property", async () => {
       const msg = "locale";
 
-      const fsWrapper = testContainer.get<IFileSystemWrapper>(DI_TOKENS.FS);
-      fsWrapper.readFile = jasmine
-        .createSpy("readFile", fsWrapper.readFile)
-        .and.returnValue(Promise.resolve(Buffer.from(JSON.stringify({ ...mockConfig, locale: undefined }))));
+      const fsMock = { readFile: () => Promise.resolve(Buffer.from(JSON.stringify({ ...mockConfig, locale: undefined }))) };
+      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       spyOn(Messages, "error").and.returnValue(msg);
 

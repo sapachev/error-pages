@@ -10,6 +10,15 @@ import { ILogger } from "./Logger";
 import { DI_TOKENS } from "./tokens";
 import { IFileSystemWrapper } from "./FileSystemWrapper";
 
+export interface IFileSystemHelper {
+  copyAssets(src: string, dest: string): Promise<void>;
+  ensure(path: string): Promise<boolean>;
+  flush(path: string): Promise<void>;
+  readFile(path: string): Promise<string>;
+  readJson<T>(path: string): Promise<T>;
+  readConfig(path: string): Promise<Config>;
+}
+
 @injectable()
 export class FileSystemHelper {
   constructor(@inject(DI_TOKENS.FS) private fs: IFileSystemWrapper, @inject(DI_TOKENS.LOGGER) private logger: ILogger) {}
@@ -42,8 +51,12 @@ export class FileSystemHelper {
     await this.fs.mkdir(path, { recursive: true });
   }
 
+  async readFile(path: string): Promise<string> {
+    return await this.fs.readFile(path).then(String);
+  }
+
   async readJson<T>(path: string): Promise<T> {
-    return await this.fs.readFile(path).then(String).then(JSON.parse);
+    return await this.readFile(path).then(JSON.parse);
   }
 
   async readConfig(path: string): Promise<Config> {
