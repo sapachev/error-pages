@@ -1,4 +1,4 @@
-import { injectable, inject, singleton } from "tsyringe";
+import { injectable, inject } from "inversify";
 
 import { Config } from "./interfaces";
 import { Messages } from "./Messages";
@@ -6,17 +6,13 @@ import { Messages } from "./Messages";
 import { MessagesEnum } from "../messages";
 import { MANDATORY_CONFIG_PROPS } from "./constants";
 import { sourceStyleFilter } from "./style";
-import { Logger } from "./Logger";
+import { ILogger } from "./Logger";
+import { DI_TOKENS } from "./tokens";
+import { IFileSystemWrapper } from "./FileSystemWrapper";
 
 @injectable()
-@singleton()
 export class FileSystemHelper {
-  constructor(
-    // TODO: try to fix fs/promise typing
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @inject("fs/promise") private fs: any,
-    @inject("logger") private logger: Logger
-  ) {}
+  constructor(@inject(DI_TOKENS.FS) private fs: IFileSystemWrapper, @inject(DI_TOKENS.LOGGER) private logger: ILogger) {}
 
   async copyAssets(src: string, dest: string): Promise<void> {
     if (await this.ensure(src)) {
@@ -40,7 +36,7 @@ export class FileSystemHelper {
   }
 
   async flush(path: string): Promise<void> {
-    console.log(`INFO: prepare build directory '${path}'`);
+    this.logger.print(Messages.info(MessagesEnum.FLUSH_DESTINATION, { path }));
 
     await this.fs.rm(path, { force: true, recursive: true });
     await this.fs.mkdir(path, { recursive: true });

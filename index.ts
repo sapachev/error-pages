@@ -1,24 +1,32 @@
 import "reflect-metadata";
 
-import * as fs from "fs/promises";
-import { container } from "tsyringe";
+import { Container } from "inversify";
 
 import { DEFAULTS } from "./lib/constants";
 import { compile } from "./lib/compile";
 import { buildTailwind } from "./lib/style";
 import { FileSystemHelper } from "./lib/FileSystemHelper";
+import { ILogger, Logger } from "./lib/Logger";
+import { Messages } from "./lib/Messages";
+import { DI_TOKENS } from "./lib/tokens";
+import { IFileSystemWrapper, NodeFS } from "./lib/FileSystemWrapper";
 
-container.register("fs/promise", { useValue: fs });
+// Register DI
+const runContainer = new Container({ defaultScope: "Singleton" });
+runContainer.bind<IFileSystemWrapper>(DI_TOKENS.FS).to(NodeFS);
+runContainer.bind<ILogger>(DI_TOKENS.LOGGER).to(Logger);
 
-container
-  .resolve(FileSystemHelper)
+const fsHelper = runContainer.resolve(FileSystemHelper);
+fsHelper
   .readConfig(DEFAULTS.CONFIG)
   .then(async (config) => {
-    const fsHelper = container.resolve(FileSystemHelper);
     await fsHelper.flush(DEFAULTS.DIST);
-    await compile(config);
+    await compile(config, fsHelper);
     await buildTailwind(config);
     await fsHelper.copyAssets(`${DEFAULTS.THEMES}/${config.theme}/${DEFAULTS.ASSETS}`, `${DEFAULTS.DIST}/${DEFAULTS.ASSETS}`);
+
+    const logger = runContainer.get<Logger>(DI_TOKENS.LOGGER);
+    logger.print(Messages.info("Done"));
   })
   .catch((err) => {
     console.error(`

@@ -4,5 +4,6 @@ export enum MessagesEnum {
 
   // Info
   COPYING_ASSETS = "Copying assets to build directory",
+  FLUSH_DESTINATION = "Flush build directory '{{ &path }}'",
   NO_ASSETS_TO_COPY = "No assets in current theme directory",
 }
