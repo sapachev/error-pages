@@ -14,9 +14,11 @@ export interface IFileSystemHelper {
   copyAssets(src: string, dest: string): Promise<void>;
   ensure(path: string): Promise<boolean>;
   flush(path: string): Promise<void>;
+  readDir(path: string): Promise<string[]>;
   readFile(path: string): Promise<string>;
   readJson<T>(path: string): Promise<T>;
   readConfig(path: string): Promise<Config>;
+  writeFile(path: string, data: string): Promise<void>;
 }
 
 @injectable()
@@ -28,10 +30,12 @@ export class FileSystemHelper {
       this.logger.print(Messages.info(MessagesEnum.COPYING_ASSETS));
       await this.fs.cp(src, dest, {
         recursive: true,
+        // TODO: add Logger.print() to filter function
         filter: sourceStyleFilter,
       });
+      // TODO: IMPROVEMENT: return list of copied files to add into web server configs as fixed locations
     } else {
-      this.logger.print(Messages.info(MessagesEnum.NO_ASSETS_TO_COPY));
+      this.logger.print(Messages.warn(MessagesEnum.NO_ASSETS_TO_COPY));
     }
   }
 
@@ -51,12 +55,23 @@ export class FileSystemHelper {
     await this.fs.mkdir(path, { recursive: true });
   }
 
+  async readDir(path: string): Promise<string[]> {
+    if (await this.ensure(path)) {
+      return await this.fs.readDir(path);
+    } else {
+      throw new Error(Messages.error(MessagesEnum.NO_DIRECTORY, { path }));
+    }
+  }
+
   async readFile(path: string): Promise<string> {
     return await this.fs.readFile(path).then(String);
   }
 
   async readJson<T>(path: string): Promise<T> {
-    return await this.readFile(path).then(JSON.parse);
+    if (await this.ensure(path)) {
+      return await this.readFile(path).then(JSON.parse);
+    }
+    return {} as T;
   }
 
   async readConfig(path: string): Promise<Config> {
@@ -70,5 +85,9 @@ export class FileSystemHelper {
     });
 
     return config;
+  }
+
+  async writeFile(path: string, data: string, opts = { flag: "w+" }): Promise<void> {
+    return await this.fs.writeFile(path, data, opts);
   }
 }

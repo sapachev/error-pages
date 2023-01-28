@@ -1,3 +1,9 @@
+export type Config = {
+  locale: string;
+  tailwind: boolean;
+  theme: string;
+};
+
 export interface Defaults {
   ASSETS: string;
   CONFIG: string;
@@ -9,14 +15,6 @@ export interface Defaults {
   THEMES: string;
 }
 
-export interface Config {
-  locale: string;
-  tailwind: boolean;
-  theme: string;
-}
-
-export type SatusCode = number;
-
 export interface AnyVariables {
   [key: string]: string | number;
 }
@@ -27,5 +25,5 @@ export interface TemplateVariables extends AnyVariables {
 }
 
 export interface SnippetVariables {
-  codes: SatusCode[];
+  codes: number[];
 }

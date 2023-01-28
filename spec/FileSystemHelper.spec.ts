@@ -46,7 +46,7 @@ describe("class FileSystemHelper", async () => {
       await expectAsync(fsHelper.copyAssets("SOURCE", "DESTINATION")).toBeResolved();
 
       expect(fsWrapper.cp).not.toHaveBeenCalled();
-      expect(logger.print).toHaveBeenCalledWith(Messages.info(MessagesEnum.NO_ASSETS_TO_COPY));
+      expect(logger.print).toHaveBeenCalledWith(Messages.warn(MessagesEnum.NO_ASSETS_TO_COPY));
     });
   });
 
@@ -56,7 +56,7 @@ describe("class FileSystemHelper", async () => {
     });
 
     it("should be resolved to 'true' value", async () => {
-      const fsMock = { access: () => null };
+      const fsMock: Partial<IFileSystemWrapper> = { access: async () => null };
       testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
@@ -64,10 +64,8 @@ describe("class FileSystemHelper", async () => {
     });
 
     it("should be resolved to 'false' value", async () => {
-      const fsMock = {
-        access: () => {
-          throw new Error();
-        },
+      const fsMock: Partial<IFileSystemWrapper> = {
+        access: async () => Promise.reject(),
       };
       testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
@@ -96,6 +94,13 @@ describe("class FileSystemHelper", async () => {
     });
   });
 
+  describe("readDir()", async () => {
+    it("should be resolved to mocked strings", async () => {
+      // TODO
+      expect(false).toBeTrue();
+    });
+  });
+
   describe("readFile()", async () => {
     const mockStr = "my string";
 
@@ -104,7 +109,7 @@ describe("class FileSystemHelper", async () => {
     });
 
     it("should be resolved to mocked string", async () => {
-      const fsMock = { readFile: () => Promise.resolve(Buffer.from(mockStr)) };
+      const fsMock: Partial<IFileSystemWrapper> = { readFile: async () => Buffer.from(mockStr) };
       testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
@@ -120,11 +125,19 @@ describe("class FileSystemHelper", async () => {
     });
 
     it("should be resolved to mocked object", async () => {
-      const fsMock = { readFile: () => Promise.resolve(Buffer.from(JSON.stringify(mockObj))) };
+      const fsMock: Partial<IFileSystemWrapper> = {
+        access: async () => null,
+        readFile: async () => Buffer.from(JSON.stringify(mockObj)),
+      };
       testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
       await expectAsync(fsHelper.readJson("path")).toBeResolvedTo(mockObj);
+    });
+
+    it("should be resolved to empty object", async () => {
+      // TODO
+      expect(false).toBeTrue();
     });
   });
 
@@ -136,7 +149,10 @@ describe("class FileSystemHelper", async () => {
     });
 
     it("should be resolved to mocked config", async () => {
-      const fsMock = { readFile: () => Promise.resolve(Buffer.from(JSON.stringify(mockConfig))) };
+      const fsMock: Partial<IFileSystemWrapper> = {
+        access: async () => null,
+        readFile: async () => Buffer.from(JSON.stringify(mockConfig)),
+      };
       testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
@@ -146,13 +162,22 @@ describe("class FileSystemHelper", async () => {
     it("should be rejected without mandatory property", async () => {
       const msg = "locale";
 
-      const fsMock = { readFile: () => Promise.resolve(Buffer.from(JSON.stringify({ ...mockConfig, locale: undefined }))) };
+      const fsMock: Partial<IFileSystemWrapper> = {
+        readFile: async () => Buffer.from(JSON.stringify({ ...mockConfig, locale: undefined })),
+      };
       testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       spyOn(Messages, "error").and.returnValue(msg);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
       await expectAsync(fsHelper.readConfig("path")).toBeRejectedWithError(msg);
+    });
+  });
+
+  describe("writeFile()", async () => {
+    it("sould be called writeFile() method", async () => {
+      // TODO
+      expect(false).toBeTrue();
     });
   });
 });

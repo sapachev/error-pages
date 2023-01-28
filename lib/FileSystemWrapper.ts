@@ -2,13 +2,19 @@ import * as fs from "fs";
 import * as fsp from "fs/promises";
 import { injectable } from "inversify";
 
+interface WriteOptions {
+  flag?: string;
+}
+
 // "fs/promises" module wrapper to get typed DI
 export interface IFileSystemWrapper {
   access(path: string): Promise<void>;
   cp(src: string, dest: string, opts?: fs.CopyOptions): Promise<void>;
   mkdir(path: string, opts?: fs.MakeDirectoryOptions): Promise<string>;
+  readDir(path: string): Promise<string[]>;
   readFile(path: string): Promise<Buffer>;
   rm(path: string, opts?: fs.RmOptions): Promise<void>;
+  writeFile(path: string, data: string, opts?: WriteOptions);
 }
 
 @injectable()
@@ -25,12 +31,20 @@ export class NodeFS implements IFileSystemWrapper {
     return fsp.mkdir(path, opts);
   }
 
+  readDir(path: string) {
+    return fsp.readdir(path);
+  }
+
   readFile(path: string) {
     return fsp.readFile(path);
   }
 
   rm(path: string, opts?: fs.RmOptions) {
     return fsp.rm(path, opts);
+  }
+
+  writeFile(path: string, data: string, opts?: WriteOptions) {
+    return fsp.writeFile(path, data, opts);
   }
 }
 
@@ -52,7 +66,15 @@ export class MockFS implements IFileSystemWrapper {
     return Promise.resolve(Buffer.from(""));
   }
 
+  readDir() {
+    return Promise.resolve([""]);
+  }
+
   rm() {
+    return Promise.resolve();
+  }
+
+  writeFile() {
     return Promise.resolve();
   }
 }

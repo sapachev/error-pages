@@ -11,6 +11,10 @@ export class Messages {
     return render(`INFO: ${msg}`, vars);
   }
 
+  static list(msg: string, vars: AnyVariables = {}): string {
+    return render(` • ${msg}`, vars);
+  }
+
   static warn(msg: string, vars: AnyVariables = {}): string {
     return render(`WARN: ${msg}`, vars);
   }
