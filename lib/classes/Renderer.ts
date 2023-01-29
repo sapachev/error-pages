@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { render } from "mustache";
 
-import { SnippetVariables, TemplateVariables } from "./interfaces";
+import { SnippetVariables, TemplateVariables } from "../interfaces";
 
 export interface IRenderer {
   renderPage(template: string, vars: TemplateVariables): string;

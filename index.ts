@@ -5,13 +5,13 @@ import { Container } from "inversify";
 // import { DEFAULTS } from "./lib/constants";
 // import { Compiler } from "./lib/Compiler";
 // import { buildTailwind } from "./lib/style";
-import { FileSystemHelper, IFileSystemHelper } from "./lib/FileSystemHelper";
-import { ILogger, Logger } from "./lib/Logger";
+import { FileSystemHelper, IFileSystemHelper } from "./lib/classes/FileSystemHelper";
+import { ILogger, Logger } from "./lib/classes/Logger";
 // import { Messages } from "./lib/Messages";
 import { DI_TOKENS } from "./lib/tokens";
-import { IFileSystemWrapper, NodeFS } from "./lib/FileSystemWrapper";
-import { Main } from "./lib/Main";
-import { IRenderer, Renderer } from "./lib/Renderer";
+import { IFileSystemWrapper, NodeFS } from "./lib/classes/FileSystemWrapper";
+import { Main } from "./lib/classes/Main";
+import { IRenderer, Renderer } from "./lib/classes/Renderer";
 
 // Register DI
 const runContainer = new Container({ defaultScope: "Singleton" });

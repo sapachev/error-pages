@@ -1,13 +1,13 @@
 import { injectable, inject } from "inversify";
 
-import { Config } from "./interfaces";
+import { Config } from "../interfaces";
 import { Messages } from "./Messages";
 
-import { MessagesEnum } from "../messages";
-import { MANDATORY_CONFIG_PROPS } from "./constants";
-import { sourceStyleFilter } from "./style";
+import { MessagesEnum } from "../../messages";
+import { MANDATORY_CONFIG_PROPS } from "../constants";
+import { sourceStyleFilter } from "../style";
 import { ILogger } from "./Logger";
-import { DI_TOKENS } from "./tokens";
+import { DI_TOKENS } from "../tokens";
 import { IFileSystemWrapper } from "./FileSystemWrapper";
 
 export interface IFileSystemHelper {

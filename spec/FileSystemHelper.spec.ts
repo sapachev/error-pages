@@ -1,11 +1,11 @@
 import { Container } from "inversify";
 import "reflect-metadata";
 
-import { FileSystemHelper } from "../lib/FileSystemHelper";
-import { IFileSystemWrapper, MockFS } from "../lib/FileSystemWrapper";
+import { FileSystemHelper } from "../lib/classes/FileSystemHelper";
+import { IFileSystemWrapper, MockFS } from "../lib/classes/FileSystemWrapper";
 import { Config } from "../lib/interfaces";
-import { ILogger, MockLogger } from "../lib/Logger";
-import { Messages } from "../lib/Messages";
+import { ILogger, MockLogger } from "../lib/classes/Logger";
+import { Messages } from "../lib/classes/Messages";
 import { DI_TOKENS } from "../lib/tokens";
 import { MessagesEnum } from "../messages";
 
