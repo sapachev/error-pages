@@ -113,16 +113,15 @@ describe("class FileSystemHelper", async () => {
     });
 
     it("should be rejected", async () => {
-      const msg = "msg";
+      const path = "path";
       const fsMock: Partial<IFileSystemWrapper> = {
         access: async () => Promise.reject(),
       };
       testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
-      spyOn(Messages, "error").and.returnValue(msg);
-
       const fsHelper = testContainer.resolve(FileSystemHelper);
-      await expectAsync(fsHelper.readDir("path")).toBeRejectedWithError(msg);
+
+      await expectAsync(fsHelper.readDir(path)).toBeRejectedWithError(Messages.error(MessagesEnum.NO_DIRECTORY, { path }));
     });
   });
 
@@ -190,17 +189,16 @@ describe("class FileSystemHelper", async () => {
     });
 
     it("should be rejected without mandatory property", async () => {
-      const msg = "locale";
+      const path = "path";
+      const prop = "locale";
 
       const fsMock: Partial<IFileSystemWrapper> = {
-        readFile: async () => Buffer.from(JSON.stringify({ ...mockConfig, locale: undefined })),
+        readFile: async () => Buffer.from(JSON.stringify({ ...mockConfig, [prop]: undefined })),
       };
       testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
-      spyOn(Messages, "error").and.returnValue(msg);
-
       const fsHelper = testContainer.resolve(FileSystemHelper);
-      await expectAsync(fsHelper.readConfig("path")).toBeRejectedWithError(msg);
+      await expectAsync(fsHelper.readConfig(path)).toBeRejectedWithError(Messages.error(MessagesEnum.NO_CONFIG_PROPERTY, { path, prop }));
     });
   });
 

@@ -1,15 +1,15 @@
 import { injectable, inject } from "inversify";
 
-// import { readFile, readdir } from "fs/promises";
 import { PackageId } from "typescript";
 import { MessagesEnum } from "../../messages";
 
-import { DEFAULTS, SRC_CODE_PATTERN } from "../constants";
 import { IFileSystemHelper } from "./FileSystemHelper";
-import { Config, TemplateVariables } from "../interfaces";
 import { ILogger } from "./Logger";
 import { Messages } from "./Messages";
 import { IRenderer } from "./Renderer";
+
+import { DEFAULTS, SRC_CODE_PATTERN } from "../constants";
+import { Config, TemplateVariables } from "../interfaces";
 import { DI_TOKENS } from "../tokens";
 
 @injectable()
