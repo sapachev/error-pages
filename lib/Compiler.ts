@@ -45,7 +45,7 @@ export class Compiler {
     return this.statusList;
   }
 
-  async makePages() {
+  async makePages(): Promise<void> {
     this.logger.print(Messages.info(MessagesEnum.COMPILE_PAGES));
     const list = await this.getStatusList();
     if (list.size > 0) {
@@ -68,7 +68,7 @@ export class Compiler {
     }
   }
 
-  async makeConfigs() {
+  async makeConfigs(): Promise<void> {
     this.logger.print(Messages.info(MessagesEnum.COMPILE_CONFIGS));
     const list = await this.getStatusList();
     if (list.size > 0) {

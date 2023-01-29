@@ -95,9 +95,34 @@ describe("class FileSystemHelper", async () => {
   });
 
   describe("readDir()", async () => {
+    const mockStrArr = ["file1", "file2"];
+
+    beforeEach(() => {
+      testContainer.unbind(DI_TOKENS.FS);
+    });
+
     it("should be resolved to mocked strings", async () => {
-      // TODO
-      expect(false).toBeTrue();
+      const fsMock: Partial<IFileSystemWrapper> = {
+        access: async () => null,
+        readDir: async () => mockStrArr,
+      };
+      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
+
+      const fsHelper = testContainer.resolve(FileSystemHelper);
+      await expectAsync(fsHelper.readDir("path")).toBeResolvedTo(mockStrArr);
+    });
+
+    it("should be rejected", async () => {
+      const msg = "msg";
+      const fsMock: Partial<IFileSystemWrapper> = {
+        access: async () => Promise.reject(),
+      };
+      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
+
+      spyOn(Messages, "error").and.returnValue(msg);
+
+      const fsHelper = testContainer.resolve(FileSystemHelper);
+      await expectAsync(fsHelper.readDir("path")).toBeRejectedWithError(msg);
     });
   });
 
@@ -136,8 +161,13 @@ describe("class FileSystemHelper", async () => {
     });
 
     it("should be resolved to empty object", async () => {
-      // TODO
-      expect(false).toBeTrue();
+      const fsMock: Partial<IFileSystemWrapper> = {
+        access: async () => Promise.reject(),
+      };
+      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
+
+      const fsHelper = testContainer.resolve(FileSystemHelper);
+      await expectAsync(fsHelper.readJson("path")).toBeResolvedTo({});
     });
   });
 
@@ -176,8 +206,13 @@ describe("class FileSystemHelper", async () => {
 
   describe("writeFile()", async () => {
     it("sould be called writeFile() method", async () => {
-      // TODO
-      expect(false).toBeTrue();
+      const fsWrapper = testContainer.get<IFileSystemWrapper>(DI_TOKENS.FS);
+      spyOn(fsWrapper, "writeFile");
+
+      const fsHelper = testContainer.resolve(FileSystemHelper);
+      await expectAsync(fsHelper.writeFile("path", "data")).toBeResolved();
+
+      expect(fsWrapper.writeFile).toHaveBeenCalled();
     });
   });
 });
