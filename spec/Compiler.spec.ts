@@ -47,6 +47,25 @@ describe("class Compiler", async () => {
     });
   });
 
+  describe("getConfig()", async () => {
+    it("config should be read once from it's provider", async () => {
+      const providerMock = {
+        readConfig: () => null,
+      };
+      spyOn(providerMock, "readConfig").and.resolveTo(mockConfig);
+
+      testContainer.rebind<ConfigProvider>(DI_TOKENS.CONFIG_PROVIDER).toProvider<Config>(() => providerMock.readConfig);
+
+      const compiler = testContainer.resolve(Compiler);
+      await compiler.getConfig();
+
+      // Next call with cache usage
+      await compiler.getConfig();
+
+      expect(providerMock.readConfig).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe("getStatusList()", async () => {
     it("should be resolved to Set of mocked status codes", async () => {
       const fsHelperMock: Partial<IFileSystemHelper> = {

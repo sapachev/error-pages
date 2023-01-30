@@ -7,7 +7,7 @@ import { Messages } from "./Messages";
 import { Renderer } from "./Renderer";
 
 import { DEFAULTS } from "../constants";
-import { ConfigProvider, TemplateVariables } from "../interfaces";
+import { Config, ConfigProvider, TemplateVariables } from "../interfaces";
 import { DI_TOKENS } from "../tokens";
 import { MessagesEnum } from "../../messages";
 
@@ -22,6 +22,7 @@ export interface ICompiler {
 
 @injectable()
 export class Compiler implements ICompiler {
+  private config: Config;
   private statusList: Set<number> = new Set();
 
   constructor(
@@ -31,7 +32,7 @@ export class Compiler implements ICompiler {
   ) {}
 
   async initTemplateVariables(): Promise<TemplateVariables> {
-    const config = await this.configProvider();
+    const config = await this.getConfig();
 
     const pkg = await this.fsHelper.readJson<PackageId>(DEFAULTS.PACKAGE);
     return {
@@ -40,8 +41,15 @@ export class Compiler implements ICompiler {
     };
   }
 
+  async getConfig(): Promise<Config> {
+    if (!this.config) {
+      this.config = await this.configProvider();
+    }
+    return this.config;
+  }
+
   async getStatusList(): Promise<Set<number>> {
-    const config = await this.configProvider();
+    const config = await this.getConfig();
 
     if (this.statusList.size === 0) {
       await this.fsHelper.readDir(`${DEFAULTS.SRC}/${config.locale}/`).then((files) => {
@@ -57,7 +65,7 @@ export class Compiler implements ICompiler {
   }
 
   async makePages(): Promise<void> {
-    const config = await this.configProvider();
+    const config = await this.getConfig();
 
     this.logger.print(Messages.info(MessagesEnum.COMPILE_PAGES));
     const list = await this.getStatusList();
