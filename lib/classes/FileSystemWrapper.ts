@@ -49,6 +49,25 @@ export class NodeFS implements IFileSystemWrapper {
 }
 
 @injectable()
+export class NodeReadOnlyFS extends NodeFS implements IFileSystemWrapper {
+  async cp() {
+    return null;
+  }
+
+  async mkdir() {
+    return "";
+  }
+
+  async rm() {
+    return null;
+  }
+
+  async writeFile() {
+    return null;
+  }
+}
+
+@injectable()
 export class MockFS implements IFileSystemWrapper {
   async access() {
     return null;

@@ -9,7 +9,7 @@ export enum MessagesEnum {
   COMPILE_CONFIGS = "Compile web servers config snippets from source data:",
   COPYING_ASSETS = "Copying assets to build directory",
   // TODO: check next text
-  DONE = "Building process has finished for {{ duration }}s",
+  DONE = "Building process was completed in {{ duration }}s",
   FLUSH_DESTINATION = "Flush build directory '{{ &path }}'",
   START = "Start building process",
 

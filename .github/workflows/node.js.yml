@@ -23,7 +23,5 @@ jobs:
           cache: "npm"
       - name: Install Dependencies
         run: npm ci
-      - name: Linter Check
-        run: npm run lint
-      - name: Unit Tests
-        run: npm run test
+      - name: Check
+        run: npm run check

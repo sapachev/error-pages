@@ -3,7 +3,7 @@ import "reflect-metadata";
 import { Container } from "inversify";
 
 import { FileSystemHelper, IFileSystemHelper } from "./lib/classes/FileSystemHelper";
-import { IFileSystemWrapper, NodeFS } from "./lib/classes/FileSystemWrapper";
+import { IFileSystemWrapper, NodeFS, NodeReadOnlyFS } from "./lib/classes/FileSystemWrapper";
 import { ILogger, Logger } from "./lib/classes/Logger";
 import { Main } from "./lib/classes/Main";
 
@@ -24,6 +24,13 @@ runContainer.bind<ConfigProvider>(DI_TOKENS.CONFIG_PROVIDER).toProvider<Config>(
     const fsHelper = ctx.container.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
     return fsHelper.readConfig(DEFAULTS.CONFIG);
   };
+});
+
+process.argv.forEach(function (arg) {
+  // Read-Only mode to check build in CI/CD without arrtifacts
+  if (arg === "--read-only") {
+    runContainer.rebind<IFileSystemWrapper>(DI_TOKENS.FS).to(NodeReadOnlyFS);
+  }
 });
 
 runContainer.resolve(Main).start();
