@@ -2,13 +2,13 @@ import { Container, inject, injectable } from "inversify";
 
 import { IFileSystemHelper } from "./FileSystemHelper";
 import { ILogger } from "./Logger";
+import { Compiler } from "./Compiler";
 import { Messages } from "./Messages";
 
 import { Config } from "../interfaces";
 import { DEFAULTS } from "../constants";
 import { DI_TOKENS } from "../tokens";
 import { MessagesEnum } from "../../messages";
-import { Compiler } from "./Compiler";
 
 @injectable()
 export class Main {

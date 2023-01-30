@@ -2,23 +2,18 @@ import "reflect-metadata";
 
 import { Container } from "inversify";
 
-// import { DEFAULTS } from "./lib/constants";
-// import { Compiler } from "./lib/Compiler";
-// import { buildTailwind } from "./lib/style";
 import { FileSystemHelper, IFileSystemHelper } from "./lib/classes/FileSystemHelper";
-import { ILogger, Logger } from "./lib/classes/Logger";
-// import { Messages } from "./lib/Messages";
-import { DI_TOKENS } from "./lib/tokens";
 import { IFileSystemWrapper, NodeFS } from "./lib/classes/FileSystemWrapper";
+import { ILogger, Logger } from "./lib/classes/Logger";
 import { Main } from "./lib/classes/Main";
-import { IRenderer, Renderer } from "./lib/classes/Renderer";
+
+import { DI_TOKENS } from "./lib/tokens";
 
 // Register DI
 const runContainer = new Container({ defaultScope: "Singleton" });
 runContainer.bind<IFileSystemHelper>(DI_TOKENS.FS_HELPER).to(FileSystemHelper);
 runContainer.bind<IFileSystemWrapper>(DI_TOKENS.FS).to(NodeFS);
 runContainer.bind<ILogger>(DI_TOKENS.LOGGER).to(Logger);
-runContainer.bind<IRenderer>(DI_TOKENS.RENDERER).to(Renderer);
 
 runContainer.resolve(Main).start(runContainer);
 

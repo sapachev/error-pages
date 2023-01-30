@@ -32,7 +32,6 @@ describe("class Compiler", async () => {
     testContainer.bind<Config>(DI_TOKENS.CONFIG).toConstantValue(mockConfig);
     testContainer.bind<IFileSystemHelper>(DI_TOKENS.FS_HELPER).to(MockFileSystemHelper);
     testContainer.bind<ILogger>(DI_TOKENS.LOGGER).to(MockLogger);
-    // testContainer.bind<IRenderer>(DI_TOKENS.RENDERER).to(MockRenderer);
   });
 
   describe("initTemplateVariables()", async () => {

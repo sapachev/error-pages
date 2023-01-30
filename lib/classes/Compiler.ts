@@ -4,7 +4,6 @@ import { PackageId } from "typescript";
 import { IFileSystemHelper } from "./FileSystemHelper";
 import { ILogger } from "./Logger";
 import { Messages } from "./Messages";
-// import { IRenderer } from "./Renderer";
 import { Renderer } from "./Renderer";
 
 import { DEFAULTS } from "../constants";
@@ -22,8 +21,7 @@ export class Compiler {
     @inject(DI_TOKENS.CONFIG) private config: Config,
     @inject(DI_TOKENS.FS_HELPER) private fsHelper: IFileSystemHelper,
     @inject(DI_TOKENS.LOGGER) private logger: ILogger
-  ) // @inject(DI_TOKENS.RENDERER) private renderer: IRenderer
-  {}
+  ) {}
 
   async initTemplateVariables(): Promise<TemplateVariables> {
     const pkg = await this.fsHelper.readJson<PackageId>(DEFAULTS.PACKAGE);
