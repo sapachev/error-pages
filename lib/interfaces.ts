@@ -27,3 +27,5 @@ export interface TemplateVariables extends AnyVariables {
 export interface SnippetVariables {
   codes: number[];
 }
+
+export type ConfigProvider = () => Promise<Config>;

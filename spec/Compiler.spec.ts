@@ -4,10 +4,9 @@ import { basename } from "path";
 
 import { IFileSystemHelper, MockFileSystemHelper } from "../lib/classes/FileSystemHelper";
 import { ILogger, MockLogger } from "../lib/classes/Logger";
-// import { IRenderer, MockRenderer } from "../lib/classes/Renderer";
 import { Messages } from "../lib/classes/Messages";
 
-import { Config } from "../lib/interfaces";
+import { Config, ConfigProvider } from "../lib/interfaces";
 import { DI_TOKENS } from "../lib/tokens";
 import { Compiler } from "../lib/classes/Compiler";
 import { version } from "mustache";
@@ -29,9 +28,9 @@ describe("class Compiler", async () => {
 
   beforeEach(() => {
     testContainer = new Container({ defaultScope: "Singleton" });
-    testContainer.bind<Config>(DI_TOKENS.CONFIG).toConstantValue(mockConfig);
     testContainer.bind<IFileSystemHelper>(DI_TOKENS.FS_HELPER).to(MockFileSystemHelper);
     testContainer.bind<ILogger>(DI_TOKENS.LOGGER).to(MockLogger);
+    testContainer.bind<ConfigProvider>(DI_TOKENS.CONFIG_PROVIDER).toProvider<Config>(() => () => Promise.resolve(mockConfig));
   });
 
   describe("initTemplateVariables()", async () => {

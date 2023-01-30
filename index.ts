@@ -8,14 +8,25 @@ import { ILogger, Logger } from "./lib/classes/Logger";
 import { Main } from "./lib/classes/Main";
 
 import { DI_TOKENS } from "./lib/tokens";
+import { Compiler, ICompiler } from "./lib/classes/Compiler";
+import { Config, ConfigProvider } from "./lib/interfaces";
+import { DEFAULTS } from "./lib/constants";
 
 // Register DI
 const runContainer = new Container({ defaultScope: "Singleton" });
+runContainer.bind<ICompiler>(DI_TOKENS.COMPILER).to(Compiler);
 runContainer.bind<IFileSystemHelper>(DI_TOKENS.FS_HELPER).to(FileSystemHelper);
 runContainer.bind<IFileSystemWrapper>(DI_TOKENS.FS).to(NodeFS);
 runContainer.bind<ILogger>(DI_TOKENS.LOGGER).to(Logger);
 
-runContainer.resolve(Main).start(runContainer);
+runContainer.bind<ConfigProvider>(DI_TOKENS.CONFIG_PROVIDER).toProvider<Config>((ctx) => {
+  return () => {
+    const fsHelper = ctx.container.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
+    return fsHelper.readConfig(DEFAULTS.CONFIG);
+  };
+});
+
+runContainer.resolve(Main).start();
 
 /* const fsHelper = runContainer.resolve(FileSystemHelper);
 fsHelper

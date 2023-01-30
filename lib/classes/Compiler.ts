@@ -7,33 +7,44 @@ import { Messages } from "./Messages";
 import { Renderer } from "./Renderer";
 
 import { DEFAULTS } from "../constants";
-import { Config, TemplateVariables } from "../interfaces";
+import { ConfigProvider, TemplateVariables } from "../interfaces";
 import { DI_TOKENS } from "../tokens";
 import { MessagesEnum } from "../../messages";
 
 export const SRC_CODE_PATTERN = /^[0-9]{3}(?=\.json$)/i;
 
+export interface ICompiler {
+  initTemplateVariables(): Promise<TemplateVariables>;
+  getStatusList(): Promise<Set<number>>;
+  makePages(): Promise<void>;
+  makeConfigs(): Promise<void>;
+}
+
 @injectable()
-export class Compiler {
+export class Compiler implements ICompiler {
   private statusList: Set<number> = new Set();
 
   constructor(
-    @inject(DI_TOKENS.CONFIG) private config: Config,
+    @inject(DI_TOKENS.CONFIG_PROVIDER) private configProvider: ConfigProvider,
     @inject(DI_TOKENS.FS_HELPER) private fsHelper: IFileSystemHelper,
     @inject(DI_TOKENS.LOGGER) private logger: ILogger
   ) {}
 
   async initTemplateVariables(): Promise<TemplateVariables> {
+    const config = await this.configProvider();
+
     const pkg = await this.fsHelper.readJson<PackageId>(DEFAULTS.PACKAGE);
     return {
-      locale: this.config.locale,
+      locale: config.locale,
       version: pkg.version,
     };
   }
 
   async getStatusList(): Promise<Set<number>> {
+    const config = await this.configProvider();
+
     if (this.statusList.size === 0) {
-      await this.fsHelper.readDir(`${DEFAULTS.SRC}/${this.config.locale}/`).then((files) => {
+      await this.fsHelper.readDir(`${DEFAULTS.SRC}/${config.locale}/`).then((files) => {
         files.forEach((file) => {
           const match = file.match(SRC_CODE_PATTERN);
           if (match) {
@@ -46,16 +57,18 @@ export class Compiler {
   }
 
   async makePages(): Promise<void> {
+    const config = await this.configProvider();
+
     this.logger.print(Messages.info(MessagesEnum.COMPILE_PAGES));
     const list = await this.getStatusList();
     if (list.size > 0) {
       const initVars = await this.initTemplateVariables();
-      const commonVars = await this.fsHelper.readJson<TemplateVariables>(`${DEFAULTS.SRC}/${this.config.locale}/common.json`);
-      const template = await this.fsHelper.readFile(`${DEFAULTS.THEMES}/${this.config.theme}/template.html`);
+      const commonVars = await this.fsHelper.readJson<TemplateVariables>(`${DEFAULTS.SRC}/${config.locale}/common.json`);
+      const template = await this.fsHelper.readFile(`${DEFAULTS.THEMES}/${config.theme}/template.html`);
 
       await Promise.all(
         Array.from(list).map(async (code) => {
-          const statusVars = await this.fsHelper.readJson<TemplateVariables>(`${DEFAULTS.SRC}/${this.config.locale}/${code}.json`);
+          const statusVars = await this.fsHelper.readJson<TemplateVariables>(`${DEFAULTS.SRC}/${config.locale}/${code}.json`);
           const path = `${DEFAULTS.DIST}/${code}.html`;
 
           this.logger.print(Messages.list(path));
