@@ -26,7 +26,8 @@ runContainer.bind<ConfigProvider>(DI_TOKENS.CONFIG_PROVIDER).toProvider<Config>(
   };
 });
 
-process.argv.forEach(function (arg) {
+process.argv.forEach((arg) => {
+  console.log(arg);
   // Read-Only mode to check build in CI/CD without arrtifacts
   if (arg === "--read-only") {
     runContainer.rebind<IFileSystemWrapper>(DI_TOKENS.FS).to(NodeReadOnlyFS);

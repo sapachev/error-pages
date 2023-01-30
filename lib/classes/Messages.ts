@@ -15,6 +15,10 @@ export class Messages {
     return render(` • ${msg}`, vars);
   }
 
+  static skip(msg: string, vars: AnyVariables = {}): string {
+    return render(`  SKIP: ${msg}`, vars);
+  }
+
   static warn(msg: string, vars: AnyVariables = {}): string {
     return render(`WARN: ${msg}`, vars);
   }

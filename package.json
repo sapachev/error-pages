@@ -5,12 +5,13 @@
   "main": "index.ts",
   "scripts": {
     "build": "npx ts-node index.ts",
+    "build:ci": "npx ts-node index.ts --read-only",
     "build:tailwind": "npx tailwindcss -i $INPUT -o $OUTPUT -m",
     "lint": "eslint .",
     "prettier": "prettier --check --ignore-unknown .",
     "prettier:fix": "prettier --write --ignore-unknown .",
     "test": "npx ts-node ./node_modules/jasmine/bin/jasmine --config=./jasmine.json",
-    "check": "npm run build --read-only && npm run lint && npm run test"
+    "check": "npm run build:ci && npm run lint && npm run test"
   },
   "author": "Pavel Sapachev",
   "repository": "https://github.com/sapachev/error-pages",
