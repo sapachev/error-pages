@@ -13,5 +13,3 @@ export const DEFAULTS: Defaults = {
 };
 
 export const MANDATORY_CONFIG_PROPS = ["locale", "theme", "tailwind"];
-
-export const SRC_CODE_PATTERN = /^[0-9]{3}(?=\.json$)/i;

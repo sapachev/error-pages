@@ -22,7 +22,7 @@ export interface IFileSystemHelper {
 }
 
 @injectable()
-export class FileSystemHelper {
+export class FileSystemHelper implements IFileSystemHelper {
   constructor(@inject(DI_TOKENS.FS) private fs: IFileSystemWrapper, @inject(DI_TOKENS.LOGGER) private logger: ILogger) {}
 
   async copyAssets(src: string, dest: string): Promise<void> {
@@ -89,5 +89,40 @@ export class FileSystemHelper {
 
   async writeFile(path: string, data: string, opts = { flag: "w+" }): Promise<void> {
     return await this.fs.writeFile(path, data, opts);
+  }
+}
+
+@injectable()
+export class MockFileSystemHelper implements IFileSystemHelper {
+  async copyAssets() {
+    return null;
+  }
+
+  async ensure() {
+    return true;
+  }
+
+  async flush() {
+    return null;
+  }
+
+  async readDir() {
+    return [""];
+  }
+
+  async readFile() {
+    return "";
+  }
+
+  async readJson<T>() {
+    return {} as T;
+  }
+
+  async readConfig() {
+    return {} as Config;
+  }
+
+  async writeFile() {
+    return null;
   }
 }

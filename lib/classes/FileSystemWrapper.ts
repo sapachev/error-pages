@@ -50,31 +50,31 @@ export class NodeFS implements IFileSystemWrapper {
 
 @injectable()
 export class MockFS implements IFileSystemWrapper {
-  access() {
-    return Promise.resolve();
+  async access() {
+    return null;
   }
 
-  cp() {
-    return Promise.resolve();
+  async cp() {
+    return null;
   }
 
-  mkdir() {
-    return Promise.resolve("");
+  async mkdir() {
+    return "";
   }
 
-  readFile() {
-    return Promise.resolve(Buffer.from(""));
+  async readFile() {
+    return Buffer.from("");
   }
 
-  readDir() {
-    return Promise.resolve([""]);
+  async readDir() {
+    return [""];
   }
 
-  rm() {
-    return Promise.resolve();
+  async rm() {
+    return null;
   }
 
-  writeFile() {
-    return Promise.resolve();
+  async writeFile() {
+    return null;
   }
 }

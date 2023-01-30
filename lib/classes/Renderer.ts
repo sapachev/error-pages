@@ -3,7 +3,7 @@ import { render } from "mustache";
 
 import { SnippetVariables, TemplateVariables } from "../interfaces";
 
-export interface IRenderer {
+/*export interface IRenderer {
   renderPage(template: string, vars: TemplateVariables): string;
   renderSnippet(template: string, vars: SnippetVariables): string;
 }
@@ -16,6 +16,24 @@ export class Renderer implements IRenderer {
   }
 
   renderSnippet(template: string, vars: SnippetVariables) {
+    return render(template, vars);
+  }
+}
+
+@injectable()
+export class MockRenderer implements IRenderer {
+  renderPage() {
+    return "";
+  }
+
+  renderSnippet() {
+    return "";
+  }
+}*/
+
+@injectable()
+export class Renderer {
+  static renderTemplate(template: string, vars: TemplateVariables | SnippetVariables) {
     return render(template, vars);
   }
 }

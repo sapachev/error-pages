@@ -1,11 +1,12 @@
-import { Container } from "inversify";
 import "reflect-metadata";
+import { Container } from "inversify";
 
 import { FileSystemHelper } from "../lib/classes/FileSystemHelper";
 import { IFileSystemWrapper, MockFS } from "../lib/classes/FileSystemWrapper";
-import { Config } from "../lib/interfaces";
 import { ILogger, MockLogger } from "../lib/classes/Logger";
 import { Messages } from "../lib/classes/Messages";
+
+import { Config } from "../lib/interfaces";
 import { DI_TOKENS } from "../lib/tokens";
 import { MessagesEnum } from "../messages";
 
@@ -97,16 +98,12 @@ describe("class FileSystemHelper", async () => {
   describe("readDir()", async () => {
     const mockStrArr = ["file1", "file2"];
 
-    beforeEach(() => {
-      testContainer.unbind(DI_TOKENS.FS);
-    });
-
     it("should be resolved to mocked strings", async () => {
       const fsMock: Partial<IFileSystemWrapper> = {
         access: async () => null,
         readDir: async () => mockStrArr,
       };
-      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
+      testContainer.rebind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
       await expectAsync(fsHelper.readDir("path")).toBeResolvedTo(mockStrArr);
@@ -117,10 +114,9 @@ describe("class FileSystemHelper", async () => {
       const fsMock: Partial<IFileSystemWrapper> = {
         access: async () => Promise.reject(),
       };
-      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
+      testContainer.rebind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
-
       await expectAsync(fsHelper.readDir(path)).toBeRejectedWithError(Messages.error(MessagesEnum.NO_DIRECTORY, { path }));
     });
   });
@@ -128,13 +124,9 @@ describe("class FileSystemHelper", async () => {
   describe("readFile()", async () => {
     const mockStr = "my string";
 
-    beforeEach(() => {
-      testContainer.unbind(DI_TOKENS.FS);
-    });
-
     it("should be resolved to mocked string", async () => {
       const fsMock: Partial<IFileSystemWrapper> = { readFile: async () => Buffer.from(mockStr) };
-      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
+      testContainer.rebind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
       await expectAsync(fsHelper.readFile("path")).toBeResolvedTo(mockStr);
@@ -144,16 +136,12 @@ describe("class FileSystemHelper", async () => {
   describe("readJson()", async () => {
     const mockObj = { prop: "val" };
 
-    beforeEach(() => {
-      testContainer.unbind(DI_TOKENS.FS);
-    });
-
     it("should be resolved to mocked object", async () => {
       const fsMock: Partial<IFileSystemWrapper> = {
         access: async () => null,
         readFile: async () => Buffer.from(JSON.stringify(mockObj)),
       };
-      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
+      testContainer.rebind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
       await expectAsync(fsHelper.readJson("path")).toBeResolvedTo(mockObj);
@@ -163,7 +151,7 @@ describe("class FileSystemHelper", async () => {
       const fsMock: Partial<IFileSystemWrapper> = {
         access: async () => Promise.reject(),
       };
-      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
+      testContainer.rebind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
       await expectAsync(fsHelper.readJson("path")).toBeResolvedTo({});
@@ -173,16 +161,12 @@ describe("class FileSystemHelper", async () => {
   describe("readConfig()", async () => {
     const mockConfig: Config = { locale: "en", tailwind: true, theme: "minimalistic" };
 
-    beforeEach(() => {
-      testContainer.unbind(DI_TOKENS.FS);
-    });
-
     it("should be resolved to mocked config", async () => {
       const fsMock: Partial<IFileSystemWrapper> = {
         access: async () => null,
         readFile: async () => Buffer.from(JSON.stringify(mockConfig)),
       };
-      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
+      testContainer.rebind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
       await expectAsync(fsHelper.readConfig("path")).toBeResolvedTo(mockConfig);
@@ -195,7 +179,7 @@ describe("class FileSystemHelper", async () => {
       const fsMock: Partial<IFileSystemWrapper> = {
         readFile: async () => Buffer.from(JSON.stringify({ ...mockConfig, [prop]: undefined })),
       };
-      testContainer.bind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
+      testContainer.rebind<Partial<IFileSystemWrapper>>(DI_TOKENS.FS).toConstantValue(fsMock);
 
       const fsHelper = testContainer.resolve(FileSystemHelper);
       await expectAsync(fsHelper.readConfig(path)).toBeRejectedWithError(Messages.error(MessagesEnum.NO_CONFIG_PROPERTY, { path, prop }));

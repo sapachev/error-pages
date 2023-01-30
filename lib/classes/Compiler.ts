@@ -1,16 +1,18 @@
 import { injectable, inject } from "inversify";
-
 import { PackageId } from "typescript";
-import { MessagesEnum } from "../../messages";
 
 import { IFileSystemHelper } from "./FileSystemHelper";
 import { ILogger } from "./Logger";
 import { Messages } from "./Messages";
-import { IRenderer } from "./Renderer";
+// import { IRenderer } from "./Renderer";
+import { Renderer } from "./Renderer";
 
-import { DEFAULTS, SRC_CODE_PATTERN } from "../constants";
+import { DEFAULTS } from "../constants";
 import { Config, TemplateVariables } from "../interfaces";
 import { DI_TOKENS } from "../tokens";
+import { MessagesEnum } from "../../messages";
+
+export const SRC_CODE_PATTERN = /^[0-9]{3}(?=\.json$)/i;
 
 @injectable()
 export class Compiler {
@@ -19,11 +21,11 @@ export class Compiler {
   constructor(
     @inject(DI_TOKENS.CONFIG) private config: Config,
     @inject(DI_TOKENS.FS_HELPER) private fsHelper: IFileSystemHelper,
-    @inject(DI_TOKENS.LOGGER) private logger: ILogger,
-    @inject(DI_TOKENS.RENDERER) private renderer: IRenderer
-  ) {}
+    @inject(DI_TOKENS.LOGGER) private logger: ILogger
+  ) // @inject(DI_TOKENS.RENDERER) private renderer: IRenderer
+  {}
 
-  private async initTemplateVariables(): Promise<TemplateVariables> {
+  async initTemplateVariables(): Promise<TemplateVariables> {
     const pkg = await this.fsHelper.readJson<PackageId>(DEFAULTS.PACKAGE);
     return {
       locale: this.config.locale,
@@ -31,7 +33,7 @@ export class Compiler {
     };
   }
 
-  private async getStatusList(): Promise<Set<number>> {
+  async getStatusList(): Promise<Set<number>> {
     if (this.statusList.size === 0) {
       await this.fsHelper.readDir(`${DEFAULTS.SRC}/${this.config.locale}/`).then((files) => {
         files.forEach((file) => {
@@ -60,7 +62,7 @@ export class Compiler {
 
           this.logger.print(Messages.list(path));
 
-          await this.fsHelper.writeFile(path, this.renderer.renderPage(template, { ...initVars, ...commonVars, ...statusVars, code }));
+          await this.fsHelper.writeFile(path, Renderer.renderTemplate(template, { ...initVars, ...commonVars, ...statusVars, code }));
         })
       );
     } else {
@@ -81,7 +83,7 @@ export class Compiler {
           this.logger.print(Messages.list(path));
 
           const template = await this.fsHelper.readFile(`${DEFAULTS.SNIPPETS}/${snippet}`);
-          await this.fsHelper.writeFile(path, this.renderer.renderSnippet(template, { codes: Array.from(list) }));
+          await this.fsHelper.writeFile(path, Renderer.renderTemplate(template, { codes: Array.from(list) }));
         })
       );
     } else {
