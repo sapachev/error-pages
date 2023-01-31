@@ -59,7 +59,7 @@ export class FileSystemHelper implements IFileSystemHelper {
     if (await this.ensure(path)) {
       return await this.fs.readDir(path);
     } else {
-      throw new Error(Messages.error(MessagesEnum.NO_DIRECTORY, { path }));
+      throw new Error(Messages.text(MessagesEnum.NO_DIRECTORY, { path }));
     }
   }
 
@@ -80,7 +80,7 @@ export class FileSystemHelper implements IFileSystemHelper {
     // Check mandatory config properties
     MANDATORY_CONFIG_PROPS.forEach((prop) => {
       if (config[prop] === undefined) {
-        throw new Error(Messages.error(MessagesEnum.NO_CONFIG_PROPERTY, { prop, path }));
+        throw new Error(Messages.text(MessagesEnum.NO_CONFIG_PROPERTY, { prop, path }));
       }
     });
 

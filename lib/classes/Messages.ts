@@ -4,7 +4,7 @@ import { AnyVariables } from "../interfaces";
 
 export class Messages {
   static error(msg: string, vars: AnyVariables = {}): string {
-    return render(msg, vars);
+    return render(`ERROR: ${msg}`, vars);
   }
 
   static info(msg: string, vars: AnyVariables = {}): string {
@@ -17,6 +17,10 @@ export class Messages {
 
   static skip(msg: string, vars: AnyVariables = {}): string {
     return render(`  SKIP: ${msg}`, vars);
+  }
+
+  static text(msg: string, vars: AnyVariables = {}): string {
+    return render(msg, vars);
   }
 
   static warn(msg: string, vars: AnyVariables = {}): string {

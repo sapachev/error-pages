@@ -98,7 +98,7 @@ describe("class FileSystemHelper", async () => {
       await fsHelper.readDir(path).then(
         () => assert.ok(false),
         (err) => {
-          assert.equal(err.message, Messages.error(MessagesEnum.NO_DIRECTORY, { path }));
+          assert.equal(err.message, Messages.text(MessagesEnum.NO_DIRECTORY, { path }));
         }
       );
     });
@@ -152,7 +152,7 @@ describe("class FileSystemHelper", async () => {
       await fsHelper.readConfig(path).then(
         () => assert.ok(false),
         (err) => {
-          assert.equal(err.message, Messages.error(MessagesEnum.NO_CONFIG_PROPERTY, { path, prop }));
+          assert.equal(err.message, Messages.text(MessagesEnum.NO_CONFIG_PROPERTY, { path, prop }));
         }
       );
     });

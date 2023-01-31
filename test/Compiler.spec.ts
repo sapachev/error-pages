@@ -179,7 +179,7 @@ describe("class Compiler", async () => {
       await compiler.makePages().then(
         () => assert.ok(false),
         (err) => {
-          assert.equal(err.message, Messages.error(MessagesEnum.NO_SOURCE_DATA));
+          assert.equal(err.message, Messages.text(MessagesEnum.NO_SOURCE_DATA));
         }
       );
       sinon.assert.calledWithExactly(printSpy, Messages.info(MessagesEnum.COMPILE_PAGES));
@@ -189,7 +189,7 @@ describe("class Compiler", async () => {
       await compiler.makeConfigs().then(
         () => assert.ok(false),
         (err) => {
-          assert.equal(err.message, Messages.error(MessagesEnum.NO_SOURCE_DATA));
+          assert.equal(err.message, Messages.text(MessagesEnum.NO_SOURCE_DATA));
         }
       );
       sinon.assert.calledWithExactly(printSpy, Messages.info(MessagesEnum.COMPILE_CONFIGS));

@@ -13,6 +13,8 @@ import { IStyler, Styler } from "./lib/classes/Styler";
 import { DI_TOKENS } from "./lib/tokens";
 import { Config, ConfigProvider } from "./lib/interfaces";
 import { DEFAULTS } from "./lib/constants";
+import { Messages } from "./lib/classes/Messages";
+import { MessagesEnum } from "./messages";
 
 // Register DI
 const runContainer = new Container({ defaultScope: "Singleton" });
@@ -30,28 +32,9 @@ runContainer.bind<ConfigProvider>(DI_TOKENS.CONFIG_PROVIDER).toProvider<Config>(
   };
 });
 
-runContainer.resolve(Main).start();
-
-/* const fsHelper = runContainer.resolve(FileSystemHelper);
-fsHelper
-  .readConfig(DEFAULTS.CONFIG)
-  .then(async (config) => {
-    await fsHelper.flush(DEFAULTS.DIST);
-    await compile(config, fsHelper);
-    await buildTailwind(config);
-    await fsHelper.copyAssets(`${DEFAULTS.THEMES}/${config.theme}/${DEFAULTS.ASSETS}`, `${DEFAULTS.DIST}/${DEFAULTS.ASSETS}`);
-
-    const logger = runContainer.get<Logger>(DI_TOKENS.LOGGER);
-    logger.print(Messages.info("Done"));
-  })
+runContainer
+  .resolve(Main)
+  .start()
   .catch((err) => {
-    console.error(`
-An error happened during compile process. Please, check 'README.md' to get more details about calling this process.
-
-Error Message:
-${err.message}
-
-Error Stack:
-${err.stack}
-    `);
-  }); */
+    runContainer.get<ILogger>(DI_TOKENS.LOGGER).print(Messages.error(MessagesEnum.OVERALL, err));
+  });

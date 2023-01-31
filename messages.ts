@@ -3,6 +3,7 @@ export enum MessagesEnum {
   NO_CONFIG_PROPERTY = "Please set '{{ prop }}' property in your configuration: {{ &path }}",
   NO_DIRECTORY = "No directory to read: {{ &path }}",
   NO_SOURCE_DATA = "No source data to compile",
+  OVERALL = "An error occurred during compilation. Please, check 'README.md' to get more details about calling this process.\n\nError Message:\n{{ &message }}\n\nError stask:\n{{ &stack }}",
 
   // Info
   COMPILE_PAGES = "Compile pages from source data:",

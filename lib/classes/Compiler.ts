@@ -85,7 +85,7 @@ export class Compiler implements ICompiler {
         })
       );
     } else {
-      throw new Error(Messages.error(MessagesEnum.NO_SOURCE_DATA));
+      throw new Error(Messages.text(MessagesEnum.NO_SOURCE_DATA));
     }
   }
 
@@ -106,7 +106,7 @@ export class Compiler implements ICompiler {
         })
       );
     } else {
-      throw new Error(Messages.error(MessagesEnum.NO_SOURCE_DATA));
+      throw new Error(Messages.text(MessagesEnum.NO_SOURCE_DATA));
     }
   }
 }
