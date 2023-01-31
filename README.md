@@ -12,7 +12,7 @@ Lightweight tool to create static HTTP Error Pages in minimalistic adaptive and 
 * Accessibility (a11y)
 * Built-in web server config generator (Nginx)
 
-![Screenshot](https://sapachev.com/share/error-pages/screenshot.png?2)
+![Screenshot](https://sapachev.com/share/error-pages/screenshot.png?3)
 
 # Demo
 
