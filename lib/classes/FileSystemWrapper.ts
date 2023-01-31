@@ -1,10 +1,6 @@
 import * as fs from "fs";
 import * as fsp from "fs/promises";
-import { inject, injectable } from "inversify";
-import { MessagesEnum } from "../../messages";
-import { DI_TOKENS } from "../tokens";
-import { ILogger } from "./Logger";
-import { Messages } from "./Messages";
+import { injectable } from "inversify";
 
 interface WriteOptions {
   flag?: string;
@@ -49,33 +45,6 @@ export class NodeFS implements IFileSystemWrapper {
 
   writeFile(path: string, data: string, opts?: WriteOptions) {
     return fsp.writeFile(path, data, opts);
-  }
-}
-
-@injectable()
-export class NodeReadOnlyFS extends NodeFS implements IFileSystemWrapper {
-  constructor(@inject(DI_TOKENS.LOGGER) private logger: ILogger) {
-    super();
-  }
-
-  async cp(src: string, dest: string) {
-    this.logger.print(Messages.skip(MessagesEnum.SKIP_CP, { src, dest }));
-    return null;
-  }
-
-  async mkdir(path: string) {
-    this.logger.print(Messages.skip(MessagesEnum.SKIP_MKDIR, { path }));
-    return "";
-  }
-
-  async rm(path: string) {
-    this.logger.print(Messages.skip(MessagesEnum.SKIP_RM, { path }));
-    return null;
-  }
-
-  async writeFile(path: string) {
-    this.logger.print(Messages.skip(MessagesEnum.SKIP_WRITE, { path }));
-    return null;
   }
 }
 

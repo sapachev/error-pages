@@ -9,6 +9,7 @@ import { ConfigProvider } from "../interfaces";
 import { DEFAULTS } from "../constants";
 import { DI_TOKENS } from "../tokens";
 import { MessagesEnum } from "../../messages";
+import { IStyler } from "./Styler";
 
 @injectable()
 export class Main {
@@ -16,11 +17,13 @@ export class Main {
     @inject(DI_TOKENS.CONFIG_PROVIDER) private configProvider: ConfigProvider,
     @inject(DI_TOKENS.COMPILER) private compiler: ICompiler,
     @inject(DI_TOKENS.FS_HELPER) private fsHelper: IFileSystemHelper,
-    @inject(DI_TOKENS.LOGGER) private logger: ILogger
+    @inject(DI_TOKENS.LOGGER) private logger: ILogger,
+    @inject(DI_TOKENS.STYLER) private styler: IStyler
   ) {}
 
   async start() {
     const startTime = Date.now();
+    const config = await this.configProvider();
 
     this.logger.print(Messages.info(MessagesEnum.START));
 
@@ -33,7 +36,14 @@ export class Main {
     // Generate web servers config snippets
     await this.compiler.makeConfigs();
 
-    const config = await this.configProvider();
+    // Generate styles with Tailwind
+    if (config.tailwind) {
+      const input = `${DEFAULTS.THEMES}/${config.theme}/${DEFAULTS.ASSETS}/css/${DEFAULTS.TAILWIND_ENTRY}`;
+      const output = `${DEFAULTS.DIST}/${DEFAULTS.ASSETS}/css/${DEFAULTS.TAILWIND_ENTRY.replace(".twnd.css", ".css")}`;
+      await this.styler.buildTailwind(input, output);
+    } else {
+      this.logger.print(Messages.warn(MessagesEnum.TAILWIND_DISABLED));
+    }
 
     //  Copy assets to the dist directory
     await this.fsHelper.copyAssets(`${DEFAULTS.THEMES}/${config.theme}/${DEFAULTS.ASSETS}`, `${DEFAULTS.DIST}/${DEFAULTS.ASSETS}`);

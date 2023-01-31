@@ -2,14 +2,13 @@ import "reflect-metadata";
 import { Container } from "inversify";
 import { basename } from "path";
 
+import { Compiler } from "../lib/classes/Compiler";
 import { IFileSystemHelper, MockFileSystemHelper } from "../lib/classes/FileSystemHelper";
 import { ILogger, MockLogger } from "../lib/classes/Logger";
 import { Messages } from "../lib/classes/Messages";
 
 import { Config, ConfigProvider } from "../lib/interfaces";
 import { DI_TOKENS } from "../lib/tokens";
-import { Compiler } from "../lib/classes/Compiler";
-import { version } from "mustache";
 import { DEFAULTS } from "../lib/constants";
 import { MessagesEnum } from "../messages";
 
@@ -25,6 +24,7 @@ describe("class Compiler", async () => {
   const mockStatusFiles = ["403.json", "404.json"];
   const mockSnippetFiles = ["nginx.conf"];
   const mockStatusCodes = new Set([403, 404]);
+  const version = "7.7.7";
 
   beforeEach(() => {
     testContainer = new Container({ defaultScope: "Singleton" });
@@ -35,8 +35,6 @@ describe("class Compiler", async () => {
 
   describe("initTemplateVariables()", async () => {
     it("should be resolved to default template variables", async () => {
-      const version = "7.7.7";
-
       const fsHelperMock: Partial<IFileSystemHelper> = {
         readJson: async <T>() => ({ version } as T),
       };

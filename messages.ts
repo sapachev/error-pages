@@ -11,6 +11,9 @@ export enum MessagesEnum {
   DONE = "Building process was completed in {{ duration }}s",
   FLUSH_DESTINATION = "Flush build directory '{{ &path }}'",
   START = "Start building process",
+  TAILWIND_CMD = "Run '{{ &cmd }}' command",
+  TAILWIND_DONE = "Tailwind CSS styles were built",
+  TAILWIND_START = "Build Tailwind CSS styles",
 
   // Skip
   SKIP_CP = "Copy {{ &src }} to {{ &dest }}",
@@ -20,4 +23,5 @@ export enum MessagesEnum {
 
   // Warnings
   NO_ASSETS_TO_COPY = "No assets in current theme directory",
+  TAILWIND_DISABLED = "Tailwind CSS was disabled in config",
 }

@@ -5,10 +5,10 @@ import { Messages } from "./Messages";
 
 import { MessagesEnum } from "../../messages";
 import { MANDATORY_CONFIG_PROPS } from "../constants";
-import { sourceStyleFilter } from "../style";
 import { ILogger } from "./Logger";
 import { DI_TOKENS } from "../tokens";
 import { IFileSystemWrapper } from "./FileSystemWrapper";
+import { Styler } from "./Styler";
 
 export interface IFileSystemHelper {
   copyAssets(src: string, dest: string): Promise<void>;
@@ -31,7 +31,7 @@ export class FileSystemHelper implements IFileSystemHelper {
       await this.fs.cp(src, dest, {
         recursive: true,
         // TODO: add Logger.print() to filter function
-        filter: sourceStyleFilter,
+        filter: Styler.sourceStyleFilter,
       });
       // TODO: IMPROVEMENT: return list of copied files to add into web server configs as fixed locations
     } else {
