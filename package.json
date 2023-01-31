@@ -10,8 +10,9 @@
     "lint": "eslint .",
     "prettier": "prettier --check --ignore-unknown .",
     "prettier:fix": "prettier --write --ignore-unknown .",
-    "test": "npx ts-node ./node_modules/jasmine/bin/jasmine --config=./jasmine.json",
-    "check": "npm run build:ci && npm run lint && npm run test"
+    "test": "nyc --reporter=html mocha -r ts-node/register 'test/**/*.ts'",
+    "test:ci": "nyc --reporter=text mocha -r ts-node/register 'test/**/*.ts'",
+    "check": "npm run build:ci && npm run lint && npm run test:ci"
   },
   "author": "Pavel Sapachev",
   "repository": "https://github.com/sapachev/error-pages",
@@ -28,18 +29,21 @@
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
-    "@types/jasmine": "^4.3.1",
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.1",
+    "@types/sinon": "^10.0.13",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
+    "chai": "^4.3.7",
     "eslint": "^8.32.0",
     "husky": "^8.0.0",
-    "jasmine": "^4.5.0",
-    "jasmine-spec-reporter": "^7.0.0",
-    "jasmine-ts": "^0.4.0",
     "lint-staged": "^13.1.0",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
     "prettier": "^2.8.3",
     "prettier-plugin-tailwindcss": "^0.2.1",
-    "pretty-quick": "^3.1.3"
+    "pretty-quick": "^3.1.3",
+    "sinon": "^15.0.1"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown ."
