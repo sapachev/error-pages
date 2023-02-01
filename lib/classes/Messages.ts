@@ -1,6 +1,7 @@
 import { render } from "mustache";
 
 import { AnyVariables } from "../interfaces";
+import { CONSOLE_COLORS } from "../constants";
 
 export class Messages {
   static error(msg: string, vars: AnyVariables = {}): string {
@@ -8,7 +9,7 @@ export class Messages {
   }
 
   static info(msg: string, vars: AnyVariables = {}): string {
-    return render(`INFO: ${msg}`, vars);
+    return render(`INFO: ${msg}`, { ...vars, ...CONSOLE_COLORS });
   }
 
   static list(msg: string, vars: AnyVariables = {}): string {
