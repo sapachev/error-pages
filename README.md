@@ -39,16 +39,16 @@ Requirements: installed Node.js 11+
 
 *Nginx*
 
-Nginx config located in `/dist/<locale>/nginx-error-pages.conf` file and can be copied to `/etc/nginx/snippets/` directory. According to this config file, all html pages and their assets must be placed to `/usr/share/nginx/html/error-pages` directory. After copying all files you have to update your server configuration with `include /etc/nginx/snippets/nginx-error-pages.conf;` line.
+Nginx config located in `/dist/<locale>/nginx-error-pages.conf` file and can be copied to `/etc/nginx/snippets/` directory. According to this config file, all html pages and their assets must be placed in the `/usr/share/nginx/html/error-pages` directory. After copying all files you have to update your server configuration with `include /etc/nginx/snippets/nginx-error-pages.conf;` line.
 
 
 # How to improve default pages
 
-* *Extensibility* A new pages can be added by adding new json files in `scr/<locale>` directory. The page name must follow to format `<HTTP code>.json` (`<HTTP code>` is Number, related to specific HTTP status code). You can put any additional data to json files, that you want to display on a page. In case of common variables, you can use `common.json` file to define them.
-* *Customization* By editing default theme you can add anything you want. In case if you want to have own page design, you can create a new theme and apply it by editing `config.json` file. All assets (images, fonts, etc) must be placed to `@assets` directory (note: the `@assets` name is used to avoid a naming collision with default assets directory name in common cases). By default the [mustache.js](https://www.npmjs.com/package/mustache) is used as a template engine and [Tailwind](https://tailwindcss.com/) as a CSS framework. Entry point of Tailwind styles must be located in `themes/<name>/@assets/css/main.twnd.css` file. Custom Tailwind theme settings can be added to `theme.tailwind.config.js` file located in a root of theme directory. If you don't want to use Tailwind builder, then it can be disabled by editing `tailwind` option in `config.js`.
-* *Localization* If you need to change default text messages, then you can simply edit existing files in`src/<locale>` directory according to your needs. If you want to create your own localization, just simply add new locale directory and create set of source files. After new locale adding, change `locale` property in `config.json` file, located in a root.
+* *Extensibility* New pages can be added by adding new json files in `scr/<locale>` directory. The page name must follow to format `<HTTP code>.json` (`<HTTP code>` is Number, related to specific HTTP status code). You can put any additional data to json files that you want to display on a page. In case of common variables, you can use the`common.json` file to define them.
+* *Customization* By editing the default theme you can add anything you want. In case if you want to have your own page design, you can create a new theme and apply it by editing `config.json` file. All assets (images, fonts, etc) must be placed in the `@assets` directory (note: the `@assets` name is used to avoid a naming collision with default assets directory name in common cases). By default the [mustache.js](https://www.npmjs.com/package/mustache) is used as a template engine and [Tailwind](https://tailwindcss.com/) as a CSS framework. Entry point of Tailwind styles must be located in `themes/<name>/@assets/css/main.twnd.css` file. Custom Tailwind theme settings can be added to the `theme.tailwind.config.js` file located in the root of the theme directory. If you don't want to use Tailwind builder, then it can be disabled by editing the `tailwind` option in `config.js`.
+* *Localization* If you need to change default text messages, then you can simply edit existing files in`src/<locale>` directory according to your needs. If you want to create your own localization, just simply add a new locale directory and create a set of source files. After new locale adding, change `locale` property in `config.json` file, located in a root.
 
 
 # Contributing
 
-You are very welcome to contribute into this project with improvements, localizations, bug fixes and so on.
+You are very welcome to contribute to this project with improvements, localizations, bug fixes and so on.
