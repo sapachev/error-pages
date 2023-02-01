@@ -12,6 +12,7 @@
     "prettier:fix": "prettier --write --ignore-unknown .",
     "test": "nyc --reporter=html mocha -r ts-node/register 'test/**/*.ts'",
     "test:ci": "nyc --reporter=text mocha -r ts-node/register 'test/**/*.ts'",
+    "test:watch": "nyc --reporter=html mocha -r ts-node/register 'test/**/*.ts' -w",
     "check": "npm run build:ci && npm run lint && npm run test:ci"
   },
   "author": "Pavel Sapachev",

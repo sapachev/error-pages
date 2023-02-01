@@ -1,11 +1,11 @@
 import { inject, injectable } from "inversify";
 
+import { IChildProcessWrapper } from "./ChildProcessWrapper";
 import { ILogger } from "./Logger";
 import { Messages } from "./Messages";
 
 import { DI_TOKENS } from "../tokens";
 import { MessagesEnum } from "../../messages";
-import { IChildProcessWrapper } from "./ChildProcessWrapper";
 
 export const TAILWIND_STYLE = /\.twnd.css$/i;
 

@@ -2,13 +2,13 @@ import { injectable, inject } from "inversify";
 
 import { Config } from "../interfaces";
 import { Messages } from "./Messages";
-
-import { MessagesEnum } from "../../messages";
-import { MANDATORY_CONFIG_PROPS } from "../constants";
-import { ILogger } from "./Logger";
-import { DI_TOKENS } from "../tokens";
-import { IFileSystemWrapper } from "./FileSystemWrapper";
 import { Styler } from "./Styler";
+import { ILogger } from "./Logger";
+import { IFileSystemWrapper } from "./FileSystemWrapper";
+
+import { DI_TOKENS } from "../tokens";
+import { MANDATORY_CONFIG_PROPS } from "../constants";
+import { MessagesEnum } from "../../messages";
 
 export interface IFileSystemHelper {
   copyAssets(src: string, dest: string): Promise<void>;
@@ -27,7 +27,7 @@ export class FileSystemHelper implements IFileSystemHelper {
 
   async copyAssets(src: string, dest: string): Promise<void> {
     if (await this.ensure(src)) {
-      this.logger.print(Messages.info(MessagesEnum.COPYING_ASSETS));
+      this.logger.print(Messages.info(MessagesEnum.COPYING_ASSETS, { dest }));
       await this.fs.cp(src, dest, {
         recursive: true,
         // TODO: add Logger.print() to filter function

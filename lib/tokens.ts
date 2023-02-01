@@ -5,6 +5,7 @@ export const DI_TOKENS = {
   FS: Symbol.for("fs-promise"),
   FS_HELPER: Symbol.for("fs-helper"),
   LOGGER: Symbol.for("logger"),
+  // PATH: Symbol.for("path-container"),
   RENDERER: Symbol.for("renderer"),
   STYLER: Symbol.for("styler"),
 };

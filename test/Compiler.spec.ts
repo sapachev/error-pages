@@ -11,8 +11,8 @@ import { Messages } from "../lib/classes/Messages";
 
 import { Config, ConfigProvider } from "../lib/interfaces";
 import { DI_TOKENS } from "../lib/tokens";
-import { DEFAULTS } from "../lib/constants";
 import { MessagesEnum } from "../messages";
+import { PathDispatcher } from "../lib/classes/PathContainer";
 
 describe("class Compiler", async () => {
   let testContainer: Container;
@@ -44,10 +44,12 @@ describe("class Compiler", async () => {
 
   describe("initTemplateVariables()", async () => {
     it("should be resolved to default template variables", async () => {
+      const pd = new PathDispatcher({ package: "package" });
+
       const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
       fsHelper.readJson = async <T>() => ({ version } as T);
 
-      assert.deepEqual(await compiler.initTemplateVariables(), { locale: mockConfig.locale, version });
+      assert.deepEqual(await compiler.initTemplateVariables(pd), { locale: mockConfig.locale, version });
     });
   });
 
@@ -71,18 +73,20 @@ describe("class Compiler", async () => {
   });
 
   describe("getStatusList()", async () => {
+    const pd = new PathDispatcher({ src: "src" });
+
     it("should be resolved to Set of mocked status codes", async () => {
       const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
       fsHelper.readDir = async () => mockStatusFiles;
 
-      assert.deepEqual(await compiler.getStatusList(), mockStatusCodes);
+      assert.deepEqual(await compiler.getStatusList(pd), mockStatusCodes);
     });
 
     it("should be resolved to filtered Set of mocked status codes", async () => {
       const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
       fsHelper.readDir = async () => [...mockStatusFiles, "1234.json", "foo.json", "bar.txt"];
 
-      assert.deepEqual(await compiler.getStatusList(), mockStatusCodes);
+      assert.deepEqual(await compiler.getStatusList(pd), mockStatusCodes);
     });
 
     it("should be executed with one readDir() call", async () => {
@@ -91,10 +95,10 @@ describe("class Compiler", async () => {
 
       const readDirSpy = sinon.spy(fsHelper, "readDir");
 
-      await compiler.getStatusList();
+      await compiler.getStatusList(pd);
 
       // Next call with cache usage
-      await compiler.getStatusList();
+      await compiler.getStatusList(pd);
 
       sinon.assert.calledOnce(readDirSpy);
     });
@@ -102,6 +106,13 @@ describe("class Compiler", async () => {
 
   describe("makePages()", async () => {
     it("should be created two pages", async () => {
+      const pd = new PathDispatcher({
+        dist: "dist",
+        package: "package.json",
+        src: "src",
+        theme: "theme",
+      });
+
       const commonVars = { common: "ABC" };
       const statusVars = { status: "XYZ" };
 
@@ -121,12 +132,12 @@ describe("class Compiler", async () => {
 
       const writeFileSpy = sinon.spy(fsHelper, "writeFile");
 
-      await compiler.makePages();
+      await compiler.makePages(pd);
 
       sinon.assert.calledWithExactly(printSpy, Messages.info(MessagesEnum.COMPILE_PAGES));
 
       Array.from(mockStatusCodes).forEach((code) => {
-        const path = `${DEFAULTS.DIST}/${code}.html`;
+        const path = pd.join("dist", `${code}.html`);
         const data = `${code}: ${commonVars.common} => ${statusVars.status}`;
 
         sinon.assert.calledWithExactly(printSpy, Messages.list(path));
@@ -136,12 +147,18 @@ describe("class Compiler", async () => {
   });
 
   describe("makeConfigs()", async () => {
+    const pd = new PathDispatcher({
+      dist: "dist",
+      src: "src",
+      snippets: "snippets",
+    });
+
     it("should be created one config file", async () => {
       const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
       fsHelper.readDir = async (path: string) => {
-        if (path === `${DEFAULTS.SRC}/${mockConfig.locale}/`) {
+        if (path === pd.get("src")) {
           return mockStatusFiles;
-        } else if (path === `${DEFAULTS.SNIPPETS}/`) {
+        } else if (path === pd.get("snippets")) {
           return mockSnippetFiles;
         }
       };
@@ -155,12 +172,12 @@ describe("class Compiler", async () => {
 
       const writeFileSpy = sinon.spy(fsHelper, "writeFile");
 
-      await compiler.makeConfigs();
+      await compiler.makeConfigs(pd);
 
       sinon.assert.calledWithExactly(printSpy, Messages.info(MessagesEnum.COMPILE_CONFIGS));
 
       Array.from(mockSnippetFiles).forEach((snippet) => {
-        const path = `${DEFAULTS.DIST}/${snippet}`;
+        const path = pd.join("dist", snippet);
         const data = `config snippet for ${Array.from(mockStatusCodes).join(" ")} `;
 
         sinon.assert.calledWithExactly(printSpy, Messages.list(path));
@@ -170,13 +187,15 @@ describe("class Compiler", async () => {
   });
 
   describe("failure scenarios", async () => {
+    const pd = new PathDispatcher({ src: "src" });
+
     beforeEach(() => {
       const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
       fsHelper.readDir = async () => [];
     });
 
     it("makePages() should be rejected", async () => {
-      await compiler.makePages().then(
+      await compiler.makePages(pd).then(
         () => assert.ok(false),
         (err) => {
           assert.equal(err.message, Messages.text(MessagesEnum.NO_SOURCE_DATA));
@@ -186,7 +205,7 @@ describe("class Compiler", async () => {
     });
 
     it("makeConfigs() should be rejected", async () => {
-      await compiler.makeConfigs().then(
+      await compiler.makeConfigs(pd).then(
         () => assert.ok(false),
         (err) => {
           assert.equal(err.message, Messages.text(MessagesEnum.NO_SOURCE_DATA));

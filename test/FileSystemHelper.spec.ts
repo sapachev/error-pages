@@ -11,6 +11,7 @@ import { Messages } from "../lib/classes/Messages";
 import { Config } from "../lib/interfaces";
 import { DI_TOKENS } from "../lib/tokens";
 import { MessagesEnum } from "../messages";
+import { PathDispatcher } from "../lib/classes/PathContainer";
 
 describe("class FileSystemHelper", async () => {
   let testContainer: Container;
@@ -31,14 +32,19 @@ describe("class FileSystemHelper", async () => {
   });
 
   describe("copyAssets()", async () => {
+    const pd = new PathDispatcher({
+      src: "src",
+      dest: "dest",
+    });
+
     it("should be called cp() method", async () => {
       const fsWrapper = testContainer.get<IFileSystemWrapper>(DI_TOKENS.FS);
       const cpSpy = sinon.spy(fsWrapper, "cp");
 
-      await fsHelper.copyAssets("SOURCE", "DESTINATION");
+      await fsHelper.copyAssets(pd.get("src"), pd.get("dest"));
 
       sinon.assert.called(cpSpy);
-      sinon.assert.calledWithExactly(printSpy, Messages.info(MessagesEnum.COPYING_ASSETS));
+      sinon.assert.calledWithExactly(printSpy, Messages.info(MessagesEnum.COPYING_ASSETS, { dest: pd.get("dest") }));
     });
 
     it("should not be called cp() method", async () => {
@@ -47,7 +53,7 @@ describe("class FileSystemHelper", async () => {
 
       const cpSpy = sinon.spy(fsWrapper, "cp");
 
-      await fsHelper.copyAssets("SOURCE", "DESTINATION");
+      await fsHelper.copyAssets(pd.get("src"), pd.get("dest"));
 
       sinon.assert.notCalled(cpSpy);
       sinon.assert.calledWithExactly(printSpy, Messages.warn(MessagesEnum.NO_ASSETS_TO_COPY));
