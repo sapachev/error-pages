@@ -9,7 +9,8 @@ export const DEFAULTS: Defaults = {
   SNIPPETS: DefaultPaths.SNIPPETS,
   SRC: DefaultPaths.SRC,
   THEMES: DefaultPaths.THEMES,
-  TAILWIND_ENTRY: DefaultPaths.TAILWIND_ENTRY,
+  TAILWIND_IN: DefaultPaths.TAILWIND_IN,
+  TAILWIND_OUT: DefaultPaths.TAILWIND_OUT,
 };
 
 export const MANDATORY_CONFIG_PROPS = ["locale", "theme", "tailwind"];

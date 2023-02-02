@@ -6,51 +6,42 @@ import { ILogger } from "./Logger";
 import { Messages } from "./Messages";
 import { Renderer } from "./Renderer";
 
-import { Config, ConfigProvider, TemplateVariables } from "../interfaces";
+import { Config, TemplateVariables } from "../interfaces";
 import { DI_TOKENS } from "../tokens";
 import { MessagesEnum } from "../../messages";
-import { PathDispatcher } from "./PathContainer";
+import { PathRegistry } from "./PathRegistry";
 
 export const SRC_CODE_PATTERN = /^[0-9]{3}(?=\.json$)/i;
 
 export interface ICompiler {
-  initTemplateVariables(pd: PathDispatcher): Promise<TemplateVariables>;
-  getStatusList(pd: PathDispatcher): Promise<Set<number>>;
-  makePages(pd: PathDispatcher): Promise<void>;
-  makeConfigs(pd: PathDispatcher): Promise<void>;
+  initTemplateVariables(): Promise<TemplateVariables>;
+  getStatusList(): Promise<Set<number>>;
+  makePages(): Promise<void>;
+  makeConfigs(): Promise<void>;
 }
 
 @injectable()
 export class Compiler implements ICompiler {
-  private config: Config;
   private statusList: Set<number> = new Set();
 
   constructor(
-    @inject(DI_TOKENS.CONFIG_PROVIDER) private configProvider: ConfigProvider,
+    @inject(DI_TOKENS.CONFIG) private config: Config,
     @inject(DI_TOKENS.FS_HELPER) private fsHelper: IFileSystemHelper,
-    @inject(DI_TOKENS.LOGGER) private logger: ILogger
+    @inject(DI_TOKENS.LOGGER) private logger: ILogger,
+    @inject(DI_TOKENS.PATH) private pr: PathRegistry
   ) {}
 
-  async initTemplateVariables(pd: PathDispatcher): Promise<TemplateVariables> {
-    const config = await this.getConfig();
-
-    const pkg = await this.fsHelper.readJson<PackageId>(pd.get("package"));
+  async initTemplateVariables(): Promise<TemplateVariables> {
+    const pkg = await this.fsHelper.readJson<PackageId>(this.pr.get("package"));
     return {
-      locale: config.locale,
+      locale: this.config.locale,
       version: pkg.version,
     };
   }
 
-  async getConfig(): Promise<Config> {
-    if (!this.config) {
-      this.config = await this.configProvider();
-    }
-    return this.config;
-  }
-
-  async getStatusList(pd: PathDispatcher): Promise<Set<number>> {
+  async getStatusList(): Promise<Set<number>> {
     if (this.statusList.size === 0) {
-      await this.fsHelper.readDir(pd.get("src")).then((files) => {
+      await this.fsHelper.readDir(this.pr.get("src")).then((files) => {
         files.forEach((file) => {
           const match = file.match(SRC_CODE_PATTERN);
           if (match) {
@@ -62,18 +53,18 @@ export class Compiler implements ICompiler {
     return this.statusList;
   }
 
-  async makePages(pd: PathDispatcher): Promise<void> {
+  async makePages(): Promise<void> {
     this.logger.print(Messages.info(MessagesEnum.COMPILE_PAGES));
-    const list = await this.getStatusList(pd);
+    const list = await this.getStatusList();
     if (list.size > 0) {
-      const initVars = await this.initTemplateVariables(pd);
-      const commonVars = await this.fsHelper.readJson<TemplateVariables>(pd.join("src", "common.json"));
-      const template = await this.fsHelper.readFile(pd.join("theme", "template.html"));
+      const initVars = await this.initTemplateVariables();
+      const commonVars = await this.fsHelper.readJson<TemplateVariables>(this.pr.join("src", "common.json"));
+      const template = await this.fsHelper.readFile(this.pr.join("theme", "template.html"));
 
       await Promise.all(
         Array.from(list).map(async (code) => {
-          const statusVars = await this.fsHelper.readJson<TemplateVariables>(pd.join("src", `${code}.json`));
-          const path = pd.join("dist", `${code}.html`);
+          const statusVars = await this.fsHelper.readJson<TemplateVariables>(this.pr.join("src", `${code}.json`));
+          const path = this.pr.join("dist", `${code}.html`);
 
           this.logger.print(Messages.list(path));
 
@@ -85,19 +76,19 @@ export class Compiler implements ICompiler {
     }
   }
 
-  async makeConfigs(pd: PathDispatcher): Promise<void> {
+  async makeConfigs(): Promise<void> {
     this.logger.print(Messages.info(MessagesEnum.COMPILE_CONFIGS));
-    const list = await this.getStatusList(pd);
+    const list = await this.getStatusList();
     if (list.size > 0) {
-      const snippets = await this.fsHelper.readDir(pd.get("snippets"));
+      const snippets = await this.fsHelper.readDir(this.pr.get("snippets"));
 
       await Promise.all(
         snippets.map(async (snippet) => {
-          const path = pd.join("dist", snippet);
+          const path = this.pr.join("dist", snippet);
 
           this.logger.print(Messages.list(path));
 
-          const template = await this.fsHelper.readFile(pd.join("snippets", snippet));
+          const template = await this.fsHelper.readFile(this.pr.join("snippets", snippet));
           await this.fsHelper.writeFile(path, Renderer.renderTemplate(template, { codes: Array.from(list) }));
         })
       );

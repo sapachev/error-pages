@@ -2,7 +2,7 @@ export enum MessagesEnum {
   // Errors
   NO_CONFIG_PROPERTY = "Please set '{{ prop }}' property in your configuration: {{ &path }}",
   NO_DIRECTORY = "No directory to read: {{ &path }}",
-  NO_PATH = "No path in container with '{{ prop }}' key",
+  NO_PATH = "No path in registry with '{{ key }}' key",
   NO_SOURCE_DATA = "No source data to compile",
   OVERALL = "An error occurred during compilation. Please, check 'README.md' to get more details about calling this process.\n\nDetails:\n{{ &stack }}",
 

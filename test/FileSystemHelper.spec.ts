@@ -11,7 +11,7 @@ import { Messages } from "../lib/classes/Messages";
 import { Config } from "../lib/interfaces";
 import { DI_TOKENS } from "../lib/tokens";
 import { MessagesEnum } from "../messages";
-import { PathDispatcher } from "../lib/classes/PathContainer";
+import { PathRegistry } from "../lib/classes/PathRegistry";
 
 describe("class FileSystemHelper", async () => {
   let testContainer: Container;
@@ -32,7 +32,7 @@ describe("class FileSystemHelper", async () => {
   });
 
   describe("copyAssets()", async () => {
-    const pd = new PathDispatcher({
+    const pd = new PathRegistry({
       src: "src",
       dest: "dest",
     });

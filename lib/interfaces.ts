@@ -11,7 +11,8 @@ export interface Defaults {
   PACKAGE: string;
   SNIPPETS: string;
   SRC: string;
-  TAILWIND_ENTRY: string;
+  TAILWIND_IN: string;
+  TAILWIND_OUT: string;
   THEMES: string;
 }
 
@@ -27,5 +28,3 @@ export interface TemplateVariables extends AnyVariables {
 export interface SnippetVariables {
   codes: number[];
 }
-
-export type ConfigProvider = () => Promise<Config>;
