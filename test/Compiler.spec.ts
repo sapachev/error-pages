@@ -9,15 +9,16 @@ import { IFileSystemHelper, MockFileSystemHelper } from "../lib/classes/FileSyst
 import { ILogger, MockLogger } from "../lib/classes/Logger";
 import { Messages } from "../lib/classes/Messages";
 
-import { Config, ConfigProvider } from "../lib/interfaces";
+import { Config } from "../lib/interfaces";
 import { DI_TOKENS } from "../lib/tokens";
-import { DEFAULTS } from "../lib/constants";
 import { MessagesEnum } from "../messages";
+import { PathRegistry } from "../lib/classes/PathRegistry";
 
 describe("class Compiler", async () => {
   let testContainer: Container;
   let compiler: Compiler;
   let printSpy: sinon.SinonSpy;
+  let pr: PathRegistry;
 
   const mockConfig: Config = {
     locale: "en",
@@ -34,7 +35,10 @@ describe("class Compiler", async () => {
     testContainer = new Container({ defaultScope: "Singleton" });
     testContainer.bind<IFileSystemHelper>(DI_TOKENS.FS_HELPER).to(MockFileSystemHelper);
     testContainer.bind<ILogger>(DI_TOKENS.LOGGER).to(MockLogger);
-    testContainer.bind<ConfigProvider>(DI_TOKENS.CONFIG_PROVIDER).toProvider<Config>(() => () => Promise.resolve(mockConfig));
+    testContainer.bind<Config>(DI_TOKENS.CONFIG).toConstantValue(mockConfig);
+
+    pr = new PathRegistry({});
+    testContainer.bind<PathRegistry>(DI_TOKENS.PATH).toConstantValue(pr);
 
     const logger = testContainer.get<ILogger>(DI_TOKENS.LOGGER);
     printSpy = sinon.spy(logger, "print");
@@ -44,6 +48,8 @@ describe("class Compiler", async () => {
 
   describe("initTemplateVariables()", async () => {
     it("should be resolved to default template variables", async () => {
+      pr.update({ package: "package" });
+
       const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
       fsHelper.readJson = async <T>() => ({ version } as T);
 
@@ -51,26 +57,9 @@ describe("class Compiler", async () => {
     });
   });
 
-  describe("getConfig()", async () => {
-    it("config should be read once from it's provider", async () => {
-      const providerMock = {
-        readConfig: async () => Promise.resolve(mockConfig),
-      };
-      const readConfigSpy = sinon.spy(providerMock, "readConfig");
-
-      testContainer.rebind<ConfigProvider>(DI_TOKENS.CONFIG_PROVIDER).toProvider<Config>(() => providerMock.readConfig);
-      compiler = testContainer.resolve(Compiler);
-
-      await compiler.getConfig();
-
-      // Next call with cache usage
-      await compiler.getConfig();
-
-      sinon.assert.calledOnce(readConfigSpy);
-    });
-  });
-
   describe("getStatusList()", async () => {
+    pr.update({ src: "src" });
+
     it("should be resolved to Set of mocked status codes", async () => {
       const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
       fsHelper.readDir = async () => mockStatusFiles;
@@ -102,6 +91,13 @@ describe("class Compiler", async () => {
 
   describe("makePages()", async () => {
     it("should be created two pages", async () => {
+      pr.update({
+        dist: "dist",
+        package: "package.json",
+        src: "src",
+        theme: "theme",
+      });
+
       const commonVars = { common: "ABC" };
       const statusVars = { status: "XYZ" };
 
@@ -126,7 +122,7 @@ describe("class Compiler", async () => {
       sinon.assert.calledWithExactly(printSpy, Messages.info(MessagesEnum.COMPILE_PAGES));
 
       Array.from(mockStatusCodes).forEach((code) => {
-        const path = `${DEFAULTS.DIST}/${code}.html`;
+        const path = pr.join("dist", `${code}.html`);
         const data = `${code}: ${commonVars.common} => ${statusVars.status}`;
 
         sinon.assert.calledWithExactly(printSpy, Messages.list(path));
@@ -136,12 +132,18 @@ describe("class Compiler", async () => {
   });
 
   describe("makeConfigs()", async () => {
+    pr.update({
+      dist: "dist",
+      src: "src",
+      snippets: "snippets",
+    });
+
     it("should be created one config file", async () => {
       const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
       fsHelper.readDir = async (path: string) => {
-        if (path === `${DEFAULTS.SRC}/${mockConfig.locale}/`) {
+        if (path === pr.get("src")) {
           return mockStatusFiles;
-        } else if (path === `${DEFAULTS.SNIPPETS}/`) {
+        } else if (path === pr.get("snippets")) {
           return mockSnippetFiles;
         }
       };
@@ -160,7 +162,7 @@ describe("class Compiler", async () => {
       sinon.assert.calledWithExactly(printSpy, Messages.info(MessagesEnum.COMPILE_CONFIGS));
 
       Array.from(mockSnippetFiles).forEach((snippet) => {
-        const path = `${DEFAULTS.DIST}/${snippet}`;
+        const path = pr.join("dist", snippet);
         const data = `config snippet for ${Array.from(mockStatusCodes).join(" ")} `;
 
         sinon.assert.calledWithExactly(printSpy, Messages.list(path));
@@ -170,6 +172,8 @@ describe("class Compiler", async () => {
   });
 
   describe("failure scenarios", async () => {
+    pr.update({ src: "src" });
+
     beforeEach(() => {
       const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
       fsHelper.readDir = async () => [];

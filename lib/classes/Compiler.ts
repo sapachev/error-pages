@@ -6,10 +6,10 @@ import { ILogger } from "./Logger";
 import { Messages } from "./Messages";
 import { Renderer } from "./Renderer";
 
-import { DEFAULTS } from "../constants";
-import { Config, ConfigProvider, TemplateVariables } from "../interfaces";
+import { Config, TemplateVariables } from "../interfaces";
 import { DI_TOKENS } from "../tokens";
 import { MessagesEnum } from "../../messages";
+import { PathRegistry } from "./PathRegistry";
 
 export const SRC_CODE_PATTERN = /^[0-9]{3}(?=\.json$)/i;
 
@@ -22,37 +22,26 @@ export interface ICompiler {
 
 @injectable()
 export class Compiler implements ICompiler {
-  private config: Config;
   private statusList: Set<number> = new Set();
 
   constructor(
-    @inject(DI_TOKENS.CONFIG_PROVIDER) private configProvider: ConfigProvider,
+    @inject(DI_TOKENS.CONFIG) private config: Config,
     @inject(DI_TOKENS.FS_HELPER) private fsHelper: IFileSystemHelper,
-    @inject(DI_TOKENS.LOGGER) private logger: ILogger
+    @inject(DI_TOKENS.LOGGER) private logger: ILogger,
+    @inject(DI_TOKENS.PATH) private pr: PathRegistry
   ) {}
 
   async initTemplateVariables(): Promise<TemplateVariables> {
-    const config = await this.getConfig();
-
-    const pkg = await this.fsHelper.readJson<PackageId>(DEFAULTS.PACKAGE);
+    const pkg = await this.fsHelper.readJson<PackageId>(this.pr.get("package"));
     return {
-      locale: config.locale,
+      locale: this.config.locale,
       version: pkg.version,
     };
   }
 
-  async getConfig(): Promise<Config> {
-    if (!this.config) {
-      this.config = await this.configProvider();
-    }
-    return this.config;
-  }
-
   async getStatusList(): Promise<Set<number>> {
-    const config = await this.getConfig();
-
     if (this.statusList.size === 0) {
-      await this.fsHelper.readDir(`${DEFAULTS.SRC}/${config.locale}/`).then((files) => {
+      await this.fsHelper.readDir(this.pr.get("src")).then((files) => {
         files.forEach((file) => {
           const match = file.match(SRC_CODE_PATTERN);
           if (match) {
@@ -65,19 +54,17 @@ export class Compiler implements ICompiler {
   }
 
   async makePages(): Promise<void> {
-    const config = await this.getConfig();
-
     this.logger.print(Messages.info(MessagesEnum.COMPILE_PAGES));
     const list = await this.getStatusList();
     if (list.size > 0) {
       const initVars = await this.initTemplateVariables();
-      const commonVars = await this.fsHelper.readJson<TemplateVariables>(`${DEFAULTS.SRC}/${config.locale}/common.json`);
-      const template = await this.fsHelper.readFile(`${DEFAULTS.THEMES}/${config.theme}/template.html`);
+      const commonVars = await this.fsHelper.readJson<TemplateVariables>(this.pr.join("src", "common.json"));
+      const template = await this.fsHelper.readFile(this.pr.join("theme", "template.html"));
 
       await Promise.all(
         Array.from(list).map(async (code) => {
-          const statusVars = await this.fsHelper.readJson<TemplateVariables>(`${DEFAULTS.SRC}/${config.locale}/${code}.json`);
-          const path = `${DEFAULTS.DIST}/${code}.html`;
+          const statusVars = await this.fsHelper.readJson<TemplateVariables>(this.pr.join("src", `${code}.json`));
+          const path = this.pr.join("dist", `${code}.html`);
 
           this.logger.print(Messages.list(path));
 
@@ -93,15 +80,15 @@ export class Compiler implements ICompiler {
     this.logger.print(Messages.info(MessagesEnum.COMPILE_CONFIGS));
     const list = await this.getStatusList();
     if (list.size > 0) {
-      const snippets = await this.fsHelper.readDir(`${DEFAULTS.SNIPPETS}/`);
+      const snippets = await this.fsHelper.readDir(this.pr.get("snippets"));
 
       await Promise.all(
         snippets.map(async (snippet) => {
-          const path = `${DEFAULTS.DIST}/${snippet}`;
+          const path = this.pr.join("dist", snippet);
 
           this.logger.print(Messages.list(path));
 
-          const template = await this.fsHelper.readFile(`${DEFAULTS.SNIPPETS}/${snippet}`);
+          const template = await this.fsHelper.readFile(this.pr.join("snippets", snippet));
           await this.fsHelper.writeFile(path, Renderer.renderTemplate(template, { codes: Array.from(list) }));
         })
       );
