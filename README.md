@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/sapachev/error-pages/badge.svg?branch=main)](https://coveralls.io/github/sapachev/error-pages?branch=main)
+[![Quality Check](https://github.com/sapachev/error-pages/actions/workflows/ci.yml/badge.svg)](https://github.com/sapachev/error-pages/actions/workflows/ci.yml) [![Coverage Status](https://coveralls.io/repos/github/sapachev/error-pages/badge.svg?branch=main)](https://coveralls.io/github/sapachev/error-pages?branch=main)
 
 ## Custom HTTP Error Pages
 
