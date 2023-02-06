@@ -58,7 +58,9 @@ describe("class Compiler", async () => {
   });
 
   describe("getStatusList()", async () => {
-    pr.update({ src: "src" });
+    beforeEach(() => {
+      pr.update({ src: "src" });
+    });
 
     it("should be resolved to Set of mocked status codes", async () => {
       const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
@@ -132,10 +134,12 @@ describe("class Compiler", async () => {
   });
 
   describe("makeConfigs()", async () => {
-    pr.update({
-      dist: "dist",
-      src: "src",
-      snippets: "snippets",
+    beforeEach(() => {
+      pr.update({
+        dist: "dist",
+        src: "src",
+        snippets: "snippets",
+      });
     });
 
     it("should be created one config file", async () => {
@@ -172,11 +176,11 @@ describe("class Compiler", async () => {
   });
 
   describe("failure scenarios", async () => {
-    pr.update({ src: "src" });
-
     beforeEach(() => {
       const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
       fsHelper.readDir = async () => [];
+
+      pr.update({ src: "src" });
     });
 
     it("makePages() should be rejected", async () => {

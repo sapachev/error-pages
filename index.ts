@@ -56,4 +56,5 @@ runContainer
   })
   .catch((err) => {
     runContainer.get<ILogger>(DI_TOKENS.LOGGER).print(Messages.error(MessagesEnum.OVERALL, err));
+    process.exit(1);
   });
