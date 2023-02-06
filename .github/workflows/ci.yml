@@ -1,4 +1,4 @@
-name: Quality Control
+name: Quality Check
 
 on:
   push:
