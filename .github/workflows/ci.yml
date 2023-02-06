@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Quality Control
 
 on:
   push:
@@ -16,11 +16,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
       - name: Prepare Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+
       - name: Install Dependencies
         run: npm ci
       - name: Check

@@ -1,4 +1,4 @@
-![Branches](#branches#)
+[![Coverage Status](https://coveralls.io/repos/github/sapachev/error-pages/badge.svg?branch=main)](https://coveralls.io/github/sapachev/error-pages?branch=main)
 
 ## Custom HTTP Error Pages
 
