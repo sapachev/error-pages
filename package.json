@@ -14,7 +14,7 @@
     "check": "npm run build:ci && npm run lint && npm run coverage:lcov",
     "coverage:html": "nyc --reporter=html npm run test",
     "coverage:json": "nyc --reporter=json-summary npm run test",
-    "coverage:lcov": "nyc report --reporter=lcov npm run test",
+    "coverage:lcov": "nyc --reporter=lcov npm run test",
     "make-badges": "istanbul-badges-readme --coverageDir='./coverage'",
     "make-badges:ci": "npm run make-badges -- --ci"
   },
