@@ -25,6 +25,7 @@ jobs:
         run: npm ci
       - name: Check
         run: npm run check
+
       - name: Coveralls GitHub Action
         uses: coverallsapp/github-action@1.1.3
         with:
