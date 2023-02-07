@@ -27,6 +27,7 @@ export enum MessagesEnum {
   SKIP_WRITE = "write to {{ &path }}",
 
   // Warnings
+  ENV_LOCALE = "Config locale value was overrided with environment value '{{ locale }}'",
   NO_ASSETS_TO_COPY = "No assets in current theme directory",
   TAILWIND_DISABLED = "Tailwind CSS was disabled in config",
 }

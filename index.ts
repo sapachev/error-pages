@@ -42,6 +42,12 @@ runContainer
   .resolve(FileSystemHelper)
   .readConfig(pr.get("config"))
   .then((config) => {
+    // Override locale config parameter with environment variable
+    if (process.env.LOCALE) {
+      config.locale = process.env.LOCALE;
+      runContainer.get<ILogger>(DI_TOKENS.LOGGER).print(Messages.warn(MessagesEnum.ENV_LOCALE, { locale: config.locale }));
+    }
+
     runContainer.bind<Config>(DI_TOKENS.CONFIG).toConstantValue(config);
 
     // Registry update with new paths, which depends on current config
