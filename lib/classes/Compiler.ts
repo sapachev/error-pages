@@ -33,6 +33,11 @@ export class Compiler implements ICompiler {
 
   async initTemplateVariables(): Promise<TemplateVariables> {
     const pkg = await this.fsHelper.readJson<PackageId>(this.pr.get("package"));
+
+    if (!this.config.locale || !pkg.version) {
+      throw new Error(Messages.text(MessagesEnum.NO_DEFAULT_VARS));
+    }
+
     return {
       locale: this.config.locale,
       version: pkg.version,
@@ -59,7 +64,11 @@ export class Compiler implements ICompiler {
     if (list.size > 0) {
       const initVars = await this.initTemplateVariables();
       const commonVars = await this.fsHelper.readJson<TemplateVariables>(this.pr.join("src", "common.json"));
+
       const template = await this.fsHelper.readFile(this.pr.join("theme", "template.html"));
+      if (!template) {
+        throw new Error(Messages.text(MessagesEnum.NO_TEMPLATE_CONTENT));
+      }
 
       await Promise.all(
         Array.from(list).map(async (code) => {
@@ -84,11 +93,15 @@ export class Compiler implements ICompiler {
 
       await Promise.all(
         snippets.map(async (snippet) => {
+          const template = await this.fsHelper.readFile(this.pr.join("snippets", snippet));
+          if (!template) {
+            throw new Error(Messages.text(MessagesEnum.NO_TEMPLATE_CONTENT));
+          }
+
           const path = this.pr.join("dist", snippet);
 
           this.logger.print(Messages.list(path));
 
-          const template = await this.fsHelper.readFile(this.pr.join("snippets", snippet));
           await this.fsHelper.writeFile(path, Renderer.renderTemplate(template, { codes: Array.from(list) }));
         })
       );

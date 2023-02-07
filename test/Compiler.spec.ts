@@ -47,9 +47,11 @@ describe("class Compiler", async () => {
   });
 
   describe("initTemplateVariables()", async () => {
-    it("should be resolved to default template variables", async () => {
+    beforeEach(() => {
       pr.update({ package: "package" });
+    });
 
+    it("should be resolved to default template variables", async () => {
       const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
       fsHelper.readJson = async <T>() => ({ version } as T);
 
@@ -74,6 +76,10 @@ describe("class Compiler", async () => {
       fsHelper.readDir = async () => [...mockStatusFiles, "1234.json", "foo.json", "bar.txt"];
 
       assert.deepEqual(await compiler.getStatusList(), mockStatusCodes);
+    });
+
+    it("should be resolved to empty Set", async () => {
+      assert.deepEqual(await compiler.getStatusList(), new Set());
     });
 
     it("should be executed with one readDir() call", async () => {
@@ -177,30 +183,112 @@ describe("class Compiler", async () => {
 
   describe("failure scenarios", async () => {
     beforeEach(() => {
-      const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
-      fsHelper.readDir = async () => [];
-
       pr.update({ src: "src" });
     });
 
-    it("makePages() should be rejected", async () => {
-      await compiler.makePages().then(
-        () => assert.ok(false),
-        (err) => {
-          assert.equal(err.message, Messages.text(MessagesEnum.NO_SOURCE_DATA));
-        }
-      );
-      sinon.assert.calledWithExactly(printSpy, Messages.info(MessagesEnum.COMPILE_PAGES));
+    describe("initTemplateVariables()", async () => {
+      beforeEach(() => {
+        pr.update({ package: "package" });
+      });
+
+      it("should be rejected without config locale", async () => {
+        testContainer.rebind<Config>(DI_TOKENS.CONFIG).toConstantValue({} as Config);
+        compiler = testContainer.resolve(Compiler);
+
+        const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
+        fsHelper.readJson = async <T>() => ({ version } as T);
+
+        await compiler.initTemplateVariables().then(
+          () => assert.ok(false),
+          (err) => {
+            assert.equal(err.message, Messages.text(MessagesEnum.NO_DEFAULT_VARS));
+          }
+        );
+      });
+
+      it("should be rejected without package version", async () => {
+        await compiler.initTemplateVariables().then(
+          () => assert.ok(false),
+          (err) => {
+            assert.equal(err.message, Messages.text(MessagesEnum.NO_DEFAULT_VARS));
+          }
+        );
+      });
     });
 
-    it("makeConfigs() should be rejected", async () => {
-      await compiler.makeConfigs().then(
-        () => assert.ok(false),
-        (err) => {
-          assert.equal(err.message, Messages.text(MessagesEnum.NO_SOURCE_DATA));
-        }
-      );
-      sinon.assert.calledWithExactly(printSpy, Messages.info(MessagesEnum.COMPILE_CONFIGS));
+    describe("makePages()", () => {
+      it("should be rejected without source data", async () => {
+        await compiler.makePages().then(
+          () => assert.ok(false),
+          (err) => {
+            assert.equal(err.message, Messages.text(MessagesEnum.NO_SOURCE_DATA));
+          }
+        );
+      });
+
+      it("should be rejected without template file", async () => {
+        pr.update({
+          package: "package.json",
+          theme: "theme",
+        });
+
+        const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
+        fsHelper.readDir = async () => mockStatusFiles;
+        fsHelper.readJson = async <T>() => ({ version } as T);
+        fsHelper.readFile = () => Promise.reject();
+
+        await compiler.makePages().then(
+          () => assert.ok(false),
+          (err) => {
+            assert.ok(true);
+          }
+        );
+      });
+
+      it("should be rejected on empty template", async () => {
+        pr.update({
+          package: "package.json",
+          theme: "theme",
+        });
+
+        const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
+        fsHelper.readDir = async () => mockStatusFiles;
+        fsHelper.readJson = async <T>() => ({ version } as T);
+
+        await compiler.makePages().then(
+          () => assert.ok(false),
+          (err) => {
+            assert.equal(err.message, Messages.text(MessagesEnum.NO_TEMPLATE_CONTENT));
+          }
+        );
+      });
+    });
+
+    describe("makePages()", () => {
+      it("should be rejected without source data", async () => {
+        await compiler.makeConfigs().then(
+          () => assert.ok(false),
+          (err) => {
+            assert.equal(err.message, Messages.text(MessagesEnum.NO_SOURCE_DATA));
+          }
+        );
+      });
+
+      it("should be rejected on empty template", async () => {
+        pr.update({
+          snippets: "snippets",
+        });
+
+        const fsHelper = testContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
+        fsHelper.readDir = async () => mockStatusFiles;
+
+        await compiler.makeConfigs().then(
+          () => assert.ok(false),
+          (err) => {
+            assert.equal(err.message, Messages.text(MessagesEnum.NO_TEMPLATE_CONTENT));
+          }
+        );
+      });
     });
   });
 });

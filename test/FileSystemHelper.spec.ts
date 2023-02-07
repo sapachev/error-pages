@@ -97,6 +97,10 @@ describe("class FileSystemHelper", async () => {
       assert.deepEqual(await fsHelper.readDir(path), mockStrArr);
     });
 
+    it("should be resolved to empty list", async () => {
+      assert.deepEqual(await fsHelper.readDir(path), []);
+    });
+
     it("should be rejected with Error", async () => {
       const fsWrapper = testContainer.get<IFileSystemWrapper>(DI_TOKENS.FS);
       fsWrapper.access = () => Promise.reject();
@@ -118,6 +122,22 @@ describe("class FileSystemHelper", async () => {
       fsWrapper.readFile = async () => Buffer.from(mockStr);
 
       assert.equal(await fsHelper.readFile(path), mockStr);
+    });
+
+    it("should be resolved to empty string", async () => {
+      assert.equal(await fsHelper.readFile(path), "");
+    });
+
+    it("should be rejected with Error", async () => {
+      const fsWrapper = testContainer.get<IFileSystemWrapper>(DI_TOKENS.FS);
+      fsWrapper.access = () => Promise.reject();
+
+      await fsHelper.readFile(path).then(
+        () => assert.ok(false),
+        (err) => {
+          assert.equal(err.message, Messages.text(MessagesEnum.NO_FILE, { path }));
+        }
+      );
     });
   });
 

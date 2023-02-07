@@ -67,7 +67,7 @@ export class MockFS implements IFileSystemWrapper {
   }
 
   async readDir() {
-    return [""];
+    return [];
   }
 
   async rm() {

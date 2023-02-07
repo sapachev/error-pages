@@ -1,9 +1,12 @@
 export enum MessagesEnum {
   // Errors
   NO_CONFIG_PROPERTY = "Please set '{{ prop }}' property in your configuration: {{ &path }}",
+  NO_FILE = "No file to read: {{ &path }}",
+  NO_DEFAULT_VARS = "Not enough data to init default template variables",
   NO_DIRECTORY = "No directory to read: {{ &path }}",
   NO_PATH = "No path in registry with '{{ key }}' key",
   NO_SOURCE_DATA = "No source data to compile",
+  NO_TEMPLATE_CONTENT = "No template content to render",
   OVERALL = "An error occurred during compilation. Please, check 'README.md' to get more details about calling this process.\n\nDetails:\n{{ &stack }}",
 
   // Info
@@ -14,7 +17,7 @@ export enum MessagesEnum {
   FLUSH_DESTINATION = "Flush build directory '{{ &path }}'",
   START = "Start building process",
   TAILWIND_CMD = "Run '{{ &cmd }}' command",
-  TAILWIND_DONE = "Tailwind CSS styles were built",
+  TAILWIND_DONE = "Tailwind CSS styles were successfully built",
   TAILWIND_START = "Build Tailwind CSS styles",
 
   // Skip

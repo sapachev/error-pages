@@ -64,7 +64,11 @@ export class FileSystemHelper implements IFileSystemHelper {
   }
 
   async readFile(path: string): Promise<string> {
-    return await this.fs.readFile(path).then(String);
+    if (await this.ensure(path)) {
+      return await this.fs.readFile(path).then(String);
+    } else {
+      throw new Error(Messages.text(MessagesEnum.NO_FILE, { path }));
+    }
   }
 
   async readJson<T>(path: string): Promise<T> {
@@ -107,7 +111,7 @@ export class MockFileSystemHelper implements IFileSystemHelper {
   }
 
   async readDir() {
-    return [""];
+    return [];
   }
 
   async readFile() {
