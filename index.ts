@@ -18,7 +18,7 @@ import { PathRegistry } from "./lib/classes/PathRegistry";
 import { DEFAULTS } from "./lib/constants";
 import { DI_TOKENS } from "./lib/tokens";
 
-// Resigstry of resolved paths used during the process
+// Resigstry of resolved paths to usage during the process
 const pr = new PathRegistry({
   assetsDist: `${DEFAULTS.DIST}/${DEFAULTS.ASSETS}`,
   config: DEFAULTS.CONFIG,
