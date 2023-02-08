@@ -12,11 +12,14 @@
       (async () => {
         // Personal Token to page Debug
         const token = "";
-        const params = {
-          headers: new Headers({
-            Authorization: `token ${token}`,
-          }),
-        };
+
+        const params = token
+          ? {
+              headers: new Headers({
+                Authorization: `token ${token}`,
+              }),
+            }
+          : {};
 
         Promise.all([
           fetch("https://api.github.com/repos/sapachev/error-pages/contents/package.json", params).then(async (response) => {

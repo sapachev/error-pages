@@ -38,6 +38,7 @@ jobs:
         run: |
           mkdir -p ./artifacts/demo
           mkdir -p ./artifacts/packages
+          mkdir -p ./artifacts/assets
 
       - name: Build GitHub Project Page
         run: |
