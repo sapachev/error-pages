@@ -49,7 +49,7 @@ jobs:
       - name: Build Package (en)
         run: |
           LOCALE=en npm run build
-          zip -rqj ./artifacts/error-pages-en.latest.zip ./packages/
+          zip -rqj ./artifacts/packages/error-pages-en.latest.zip ./dist/
           cp -r ./dist/ ./artifacts/demo
 
       - name: Upload artifacts
