@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "build": "npx ts-node index.ts",
-    "build:ci": "npx ts-node index.ts --read-only",
+    "build:pages": "npx tailwind -i ./pages/main.twnd.css -o ./artifacts/main.css",
     "build:tailwind": "npx tailwindcss -i $INPUT -o $OUTPUT -m",
     "lint": "eslint .",
     "prettier": "prettier --check --ignore-unknown .",
@@ -13,7 +13,6 @@
     "test": "mocha -r ts-node/register 'test/**/*.ts'",
     "check": "npm run build:ci && npm run lint && npm run coverage:lcov",
     "coverage:html": "nyc --reporter=html npm run test",
-    "coverage:json": "nyc --reporter=json-summary npm run test",
     "coverage:lcov": "nyc --reporter=lcov npm run test"
   },
   "author": "Pavel Sapachev",

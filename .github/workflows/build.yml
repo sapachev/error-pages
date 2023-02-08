@@ -34,16 +34,22 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Build (en)
+      - name: Prepare Artifacts Directory
+        run: mkdir ./artifacts
+
+      - name: Build GitHub Project Page
         run: |
-          mkdir ./artifacts
+          cp ./pages/index.html ./artifacts
+          npm run build:pages
+
+      - name: Build Package (en)
+        run: |
           LOCALE=en npm run build
-          zip -rq ./artifacts/error-pages-en.latest.zip ./dist/
+          zip -rqj ./artifacts/error-pages-en.latest.zip ./dist/
 
       - name: Upload artifacts
         uses: actions/upload-pages-artifact@v1
         with:
-          # Upload only docs directory
           path: "artifacts"
 
       - name: Deploy to GitHub Pages
