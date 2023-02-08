@@ -3,9 +3,99 @@
   <head>
     <title>Error Pages</title>
 
-    <link href="./main.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/main.css" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:wght@400;600&display=swap" rel="stylesheet" />
+
+    <script>
+      (async () => {
+        // Personal Token to page Debug
+        const token = "";
+        const params = {
+          headers: new Headers({
+            Authorization: `token ${token}`,
+          }),
+        };
+
+        Promise.all([
+          fetch("https://api.github.com/repos/sapachev/error-pages/contents/package.json", params).then(async (response) => {
+            if (response?.ok) {
+              const package = await response.json();
+              const version = JSON.parse(window.atob(package.content)).version;
+              document.getElementById("version").innerText = version;
+            }
+          }),
+          fetch("https://api.github.com/repos/sapachev/error-pages/contents/src/", params).then(async (response) => {
+            if (response?.ok) {
+              const srcLocales = await response.json();
+              const pkgName = "error-pages-XX.latest.zip";
+
+              let list = "";
+              for (let file of srcLocales) {
+                const localePkgName = pkgName.replace("XX", file.name);
+                list += `<li><a href="./packages/${localePkgName}" title="Download Package for the '${file.name}' locale" rel="nofollow">${file.name}</a></li>`;
+              }
+              document.getElementById("list").innerHTML = list;
+            } else {
+              document.getElementById("list").innerText = `Unable to load packages list due to the error "${response.status}"`;
+            }
+          }),
+        ]);
+      })();
+    </script>
   </head>
-  <body>
-    Hi there, this is The Error Pages!
+  <body class="container mx-auto px-4 py-8 text-slate-700 sm:w-max">
+    <h1>The Error Pages</h1>
+    <p class="mt-4">
+      Lightweight tool to create static HTTP Error Pages in minimalistic adaptive and accessible design with customization and localization
+      support.
+    </p>
+
+    <div class="mt-2">
+      Latest version: <span id="version" class="font-bold">x.x.x</span> (<a href="https://github.com/sapachev/error-pages" target="_blank"
+        >visit GitHub Repository</a
+      >)
+    </div>
+    <div class="mt-2 flex items-center">
+      Status:
+      <img
+        class="ml-2 inline"
+        src="https://github.com/sapachev/error-pages/actions/workflows/build.yml/badge.svg"
+        alt="Build and Deploy status badge"
+      />
+    </div>
+
+    <img class="xs:w-fit mt-8 -mb-8" src="./assets/screenshot.png" alt="Preview of Error 404" />
+
+    <h2>Main Features:</h2>
+    <ul class="list-inside list-disc px-4">
+      <li>Static pages with simple and responsive design</li>
+      <li>Lightweight and fast running</li>
+      <li>Extensibility</li>
+      <li>Customization</li>
+      <li>Localization (i18n)</li>
+      <li>Accessibility (a11y)</li>
+      <li>Built-in web server config generator (Nginx)</li>
+    </ul>
+
+    <h2>Demo</h2>
+    <ul class="list-inside list-disc px-4">
+      <li><a href="./demo/400.html" target="_blank" rel="nofollow">400 Bad Request</a></li>
+      <li><a href="./demo/401.html" target="_blank" rel="nofollow">401 Unauthorized</a></li>
+      <li><a href="./demo/403.html" target="_blank" rel="nofollow">403 Forbidden</a></li>
+      <li><a href="./demo/404.html" target="_blank" rel="nofollow">404 Not Found</a></li>
+      <li><a href="./demo/410.html" target="_blank" rel="nofollow">410 Gone</a></li>
+      <li><a href="./demo/500.html" target="_blank" rel="nofollow">500 Internal Server Error</a></li>
+      <li><a href="./demo/502.html" target="_blank" rel="nofollow">502 Bad Gateway</a></li>
+      <li><a href="./demo/503.html" target="_blank" rel="nofollow">503 Service Unavailable</a></li>
+      <li><a href="./demo/504.html" target="_blank" rel="nofollow">504 Gateway Timeout</a></li>
+    </ul>
+
+    <h2>Precompiled Packages:</h2>
+    <ul id="list" class="list-inside list-disc px-4">
+      <p>Wait to load packages list...</p>
+      <noscript>Unable to load packages list due to disabled JavaScript</noscript>
+    </ul>
   </body>
 </html>

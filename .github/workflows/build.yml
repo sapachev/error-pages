@@ -35,17 +35,21 @@ jobs:
         run: npm ci
 
       - name: Prepare Artifacts Directory
-        run: mkdir ./artifacts
+        run: |
+          mkdir -p ./artifacts/demo
+          mkdir -p ./artifacts/packages
 
       - name: Build GitHub Project Page
         run: |
           cp ./pages/index.html ./artifacts
+          cp ./pages/assets ./artifacts
           npm run build:pages
 
       - name: Build Package (en)
         run: |
           LOCALE=en npm run build
           zip -rqj ./artifacts/error-pages-en.latest.zip ./dist/
+          cp -r ./dist/ ./artifacts/demo
 
       - name: Upload artifacts
         uses: actions/upload-pages-artifact@v1
