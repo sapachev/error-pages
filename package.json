@@ -11,7 +11,7 @@
     "prettier": "prettier --check --ignore-unknown .",
     "prettier:fix": "prettier --write --ignore-unknown .",
     "test": "mocha -r ts-node/register 'test/**/*.ts'",
-    "check": "npm run build:ci && npm run lint && npm run coverage:lcov",
+    "check": "npm run build && npm run lint && npm run coverage:lcov",
     "coverage:html": "nyc --reporter=html npm run test",
     "coverage:lcov": "nyc --reporter=lcov npm run test"
   },
