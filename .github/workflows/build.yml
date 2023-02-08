@@ -43,14 +43,14 @@ jobs:
       - name: Build GitHub Project Page
         run: |
           cp ./pages/index.html ./artifacts
-          cp -r ./pages/assets ./artifacts
+          cp -rv ./pages/assets ./artifacts
           npm run build:pages
 
       - name: Build Package (en)
         run: |
           LOCALE=en npm run build
           zip -rqj ./artifacts/packages/error-pages-en.latest.zip ./dist/
-          cp -r ./dist/ ./artifacts/demo
+          cp -rv ./dist/ ./artifacts/demo
 
       - name: Upload artifacts
         uses: actions/upload-pages-artifact@v1
