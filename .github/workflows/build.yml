@@ -30,6 +30,7 @@ jobs:
 
       - name: Build (en)
         run: |
+          mkdir ./artifacts
           LOCALE=en npm run build
           zip -rq ./artifacts/error-pages-en.latest.zip ./dist/
 
