@@ -14,7 +14,7 @@ Lightweight tool to create static HTTP Error Pages in minimalistic adaptive and 
 * Accessibility (a11y)
 * Built-in web server config generator (Nginx)
 
-![Screenshot](https://sapachev.com/share/error-pages/screenshot.png?3)
+![Screenshot](https://sapachev.github.io/error-pages/assets/screenshot.png?1)
 
 # Demo
 
@@ -27,6 +27,11 @@ Lightweight tool to create static HTTP Error Pages in minimalistic adaptive and 
 * [502 Bad Gateway](https://sapachev.com/error-pages/bad-gateway)
 * [503 Service Unavailable](https://sapachev.com/error-pages/service-unavailable)
 * [504 Gateway Timeout](https://sapachev.com/error-pages/gateway-timeout)
+
+
+# Precompiled Packages
+
+If you want to get already precompiled packages, then you can download latest versions from [official website]|(https://sapachev.github.io/error-pages/#precompiled-packages).
 
 
 # How to use

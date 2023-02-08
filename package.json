@@ -1,19 +1,18 @@
 {
   "name": "error-pages",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Lightweight tool to create static HTTP Error Pages in minimalistic adaptive and accessible design with customization and localization support",
   "main": "index.ts",
   "scripts": {
     "build": "npx ts-node index.ts",
-    "build:ci": "npx ts-node index.ts --read-only",
+    "build:pages": "npx tailwind -c ./pages/tailwind.config.js -i ./pages/main.twnd.css -o ./artifacts/assets/main.css -m",
     "build:tailwind": "npx tailwindcss -i $INPUT -o $OUTPUT -m",
     "lint": "eslint .",
     "prettier": "prettier --check --ignore-unknown .",
     "prettier:fix": "prettier --write --ignore-unknown .",
     "test": "mocha -r ts-node/register 'test/**/*.ts'",
-    "check": "npm run build:ci && npm run lint && npm run coverage:lcov",
+    "check": "npm run build && npm run lint && npm run coverage:lcov",
     "coverage:html": "nyc --reporter=html npm run test",
-    "coverage:json": "nyc --reporter=json-summary npm run test",
     "coverage:lcov": "nyc --reporter=lcov npm run test"
   },
   "author": "Pavel Sapachev",

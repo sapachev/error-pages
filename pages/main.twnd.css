@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  font-family: "Noto Sans Display", sans-serif;
+}
+
+a {
+  @apply text-sky-700 hover:underline;
+}
