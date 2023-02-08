@@ -29,6 +29,11 @@ Lightweight tool to create static HTTP Error Pages in minimalistic adaptive and 
 * [504 Gateway Timeout](https://sapachev.com/error-pages/gateway-timeout)
 
 
+# Precompiled Packages
+
+If you want to get already precompiled packages, then you can download latest versions from [official website]|(https://sapachev.github.io/error-pages/#precompiled-packages).
+
+
 # How to use
 
 Requirements: installed Node.js 11+
