@@ -31,7 +31,7 @@ Lightweight tool to create static HTTP Error Pages in minimalistic adaptive and 
 
 # Precompiled Packages
 
-If you want to get already precompiled packages, then you can download latest versions from [official website]|(https://sapachev.github.io/error-pages/#precompiled-packages).
+If you want to get already precompiled packages, please download latest version from [official website](https://sapachev.github.io/error-pages/#precompiled-packages).
 
 
 # How to use
