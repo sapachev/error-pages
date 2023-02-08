@@ -42,7 +42,7 @@ jobs:
       - name: Build GitHub Project Page
         run: |
           cp ./pages/index.html ./artifacts
-          cp ./pages/assets ./artifacts
+          cp -r ./pages/assets ./artifacts
           npm run build:pages
 
       - name: Build Package (en)
