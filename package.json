@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "build": "npx ts-node index.ts",
-    "build:pages": "npx tailwind -c ./pages/tailwind.config.js -i ./pages/main.twnd.css -o ./pages/assets/main.css -m",
+    "build:pages": "npx tailwind -c ./pages/tailwind.config.js -i ./pages/main.twnd.css -o ./artifacts/assets/main.css -m",
     "build:tailwind": "npx tailwindcss -i $INPUT -o $OUTPUT -m",
     "lint": "eslint .",
     "prettier": "prettier --check --ignore-unknown .",
