@@ -1,0 +1,4 @@
+{
+  "name": "Schlechtes Portal",
+  "message": "Der Server ist als Gateway oder Proxy konfiguriert und erhält keine gültige Antwort von den Backend-Servern, die eigentlich Ihre Anfrage erfüllen sollten. Bitte versuchen Sie, diese Seite später erneut aufzurufen."
+}

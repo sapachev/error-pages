@@ -1,0 +1,4 @@
+{
+  "name": "Portal-Auszeit",
+  "message": "Der Server ist als Gateway oder Proxy-Server konfiguriert und erhält keine Antwort von den Backend-Servern innerhalb des zulässigen Zeitraums. Bitte versuchen Sie, diese Seite später erneut aufzurufen."
+}
