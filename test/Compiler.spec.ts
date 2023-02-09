@@ -239,7 +239,7 @@ describe("class Compiler", async () => {
 
         await compiler.makePages().then(
           () => assert.ok(false),
-          (err) => {
+          () => {
             assert.ok(true);
           }
         );
