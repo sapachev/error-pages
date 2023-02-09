@@ -17,13 +17,13 @@
 
   <body class="bg-slate-200 text-slate-700">
     <div class="wrapper grid grid-rows-centered items-center justify-items-center gap-4 py-4">
-      <div class="grid w-full items-center gap-8 sm:w-min">
-        <header class="grid-cols-centered grid grid-flow-row items-center justify-items-center gap-4 sm:grid-flow-col">
-          <h1 class="text-9xl font-semibold">{{ code }}</h1>
-          <h2 class="break-words text-center text-5xl sm:w-max sm:max-w-xs sm:text-left">{{ name }}</h2>
+      <div class="grid w-full items-center gap-8">
+        <header class="flex flex-col items-center justify-center justify-items-center md:flex-row">
+          <h1 class="text-9xl font-semibold sm:inline-block">{{ code }}</h1>
+          <h2 class="text-center text-5xl sm:inline-block md:ml-4">{{ name }}</h2>
         </header>
 
-        <main class="mx-4 text-center text-xl sm:-mx-4">
+        <main class="mx-4 justify-self-center text-center text-xl sm:-mx-4 sm:w-152">
           <p class="mb-8">{{ message }}</p>
           <p>{{ apology }}</p>
         </main>
