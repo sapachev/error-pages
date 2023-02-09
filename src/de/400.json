@@ -1,0 +1,4 @@
+{
+  "name": "Ungültige Anfrage",
+  "message": "Der Server kann die Anfrage mit ungültiger Syntax aufgrund eines Client-Fehlers nicht verarbeiten."
+}

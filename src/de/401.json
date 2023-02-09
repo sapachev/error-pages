@@ -1,0 +1,4 @@
+{
+  "name": "Unautorisiert",
+  "message": "Die Anfrage kann nicht ohne gültige Authentifizierungsdaten für die Zielressource durchgeführt werden."
+}
