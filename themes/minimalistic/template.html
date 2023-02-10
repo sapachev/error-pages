@@ -8,17 +8,17 @@
     <meta name="author" content="Pavel Sapachev" />
     <meta name="version" content="{{ version }}" />
 
-    <link href="/%40assets/css/main.css?v{{ version }}" rel="stylesheet" type="text/css" />
+    <link href="./%40assets/css/main.css?v{{ version }}" rel="stylesheet" type="text/css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:wght@400;600&display=swap" rel="stylesheet" />
   </head>
 
-  <body class="bg-slate-200 text-slate-700">
+  <body class="min-w-60 bg-slate-200 text-slate-700">
     <div class="wrapper grid grid-rows-centered items-center justify-items-center gap-4 py-4">
       <div class="grid w-full items-center gap-8">
-        <header class="flex flex-col items-center justify-center justify-items-center md:flex-row">
+        <header class="flex flex-col flex-wrap items-center justify-center justify-items-center md:flex-row">
           <h1 class="text-9xl font-semibold sm:inline-block">{{ code }}</h1>
           <h2 class="text-center text-5xl sm:inline-block md:ml-4">{{ name }}</h2>
         </header>
@@ -38,9 +38,9 @@
         </button>
       </div>
 
-      <footer>
+      <footer class="text-center">
         <a
-          href="https://github.com/sapachev/error-pages"
+          href="https://sapachev.github.io/error-pages/"
           target="_blank"
           class="text-slate-500 focus:ring-2 focus:ring-slate-700 focus:ring-offset-4 focus:ring-offset-slate-200 focus-visible:outline-none"
           aria-label="{{ comment-aria }}"
