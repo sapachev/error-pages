@@ -44,17 +44,17 @@ jobs:
       - name: Build Package (de)
         run: |
           LOCALE=de npm run build
-          zip -rqj ./artifacts/packages/error-pages-de.latest.zip ./dist/
+          zip -rq ./artifacts/packages/error-pages-de.latest.zip ./dist/
 
       - name: Build Package (en)
         run: |
           LOCALE=en npm run build
-          zip -rqj ./artifacts/packages/error-pages-en.latest.zip ./dist/
+          zip -rq ./artifacts/packages/error-pages-en.latest.zip ./dist/
 
       - name: Build Package (ru)
         run: |
           LOCALE=ru npm run build
-          zip -rqj ./artifacts/packages/error-pages-ru.latest.zip ./dist/
+          zip -rq ./artifacts/packages/error-pages-ru.latest.zip ./dist/
 
       - name: Upload artifacts
         uses: actions/upload-pages-artifact@v1
