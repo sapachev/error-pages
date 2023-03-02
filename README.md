@@ -1,10 +1,12 @@
 [![Quality Check](https://github.com/sapachev/error-pages/actions/workflows/ci.yml/badge.svg)](https://github.com/sapachev/error-pages/actions/workflows/ci.yml) [![Coverage Status](https://coveralls.io/repos/github/sapachev/error-pages/badge.svg?branch=main)](https://coveralls.io/github/sapachev/error-pages?branch=main)
 
-## The Error Pages
+# The Error Pages
 
 Lightweight tool to create static custom HTTP Error Pages in minimalistic adaptive and accessible design with customization and localization support.
 
-# Features
+![Screenshot](https://sapachev.github.io/error-pages/assets/screenshot.png?3)
+
+## Features
 
 * Static pages with simple and responsive design
 * Lightweight and fast running
@@ -14,9 +16,8 @@ Lightweight tool to create static custom HTTP Error Pages in minimalistic adapti
 * Accessibility (a11y)
 * Built-in web server config generator (Nginx)
 
-![Screenshot](https://sapachev.github.io/error-pages/assets/screenshot.png?2)
 
-# Demo
+## Demo
 
 * [400 Bad Request](https://sapachev.com/error-pages/bad-request)
 * [401 Unauthorized](https://sapachev.com/error-pages/unauthorized)
@@ -29,12 +30,17 @@ Lightweight tool to create static custom HTTP Error Pages in minimalistic adapti
 * [504 Gateway Timeout](https://sapachev.com/error-pages/gateway-timeout)
 
 
-# Precompiled Packages
+## Primitive Usage
 
 If you want to get already precompiled packages, please download latest version from [official website](https://sapachev.github.io/error-pages/#precompiled-packages).
 
+The installation steps are following:
+1. Download [package](https://sapachev.github.io/error-pages/#precompiled-packages) and extract files from it
+2. Copy static html files from `dist` directory to your server
+3. Copy and apply config snippet from `dist` to your web server configuration.
 
-# How to use
+
+## Basic Usage
 
 Requirements: installed Node.js 11+
 
@@ -42,20 +48,96 @@ Requirements: installed Node.js 11+
 2. Run `npm install --production` command to install dependencies
 3. Run `npm run build` command to compile error pages and web server configs
 4. Copy static html files from `dist` directory to your server
-5. Copy and apply config snippet from `dist` to your web server configuration (see details below).
+5. Copy and apply config snippet from `dist` to your web server configuration.
 
-*Nginx*
+```
+$ git clone git@github.com:sapachev/error-pages.git
+…
+$ npm install --production
+…
+$ npm run build
+…
+INFO: Start building process
+INFO: Flush build directory ‘/home/error-pages/dist’
+INFO: Compile pages from source data:
+• /home/error-pages/dist/400.html
+• /home/error-pages/dist/401.html
+• /home/error-pages/dist/403.html
+• /home/error-pages/dist/404.html
+• /home/error-pages/dist/410.html
+• /home/error-pages/dist/500.html
+• /home/error-pages/dist/502.html
+• /home/error-pages/dist/503.html
+• /home/error-pages/dist/504.html
+INFO: Compile web servers config snippets from source data:
+• /home/error-pages/dist/nginx-error-pages.conf
+INFO: Build Tailwind CSS styles
+INFO: Run ‘INPUT="/home/error-pages/themes/minimalistic/@assets/css/main.twnd.css" OUTPUT="/home/error-pages/dist/@assets/css/main.css" npm run build:tailwind’ command
+INFO: Tailwind CSS styles were built
+INFO: Copying assets to ‘/home/error-pages/dist/@assets’ directory
+INFO: Building process was completed in 1.727s
+```
 
-Nginx config located in `/dist/<locale>/nginx-error-pages.conf` file and can be copied to `/etc/nginx/snippets/` directory. According to this config file, all html pages and their assets must be placed in the `/usr/share/nginx/html/error-pages` directory. After copying all files you have to update your server configuration with `include /etc/nginx/snippets/nginx-error-pages.conf;` line.
+
+## Advanced Usage
+
+In addition to steps from Basic Usage, you can improve results by changing some parts of the default package: templates, styles, texts, web server snippets.
+
+The main configuration is stored in the `config.json` file in a root directory and you can change this config file according to your needs:
+
+```{
+  "tailwind": true,
+  "theme": "minimalistic",
+  "locale": "en"
+}
+```
+
+### Templates
+
+All templates are located in the `themes` directory. You can change the existing `minimalistic` theme or add a new one. There are no special requirements to page templates: every template is a usual HTML document with injected variables for the text messages from locale files. The [mustache.js](https://www.npmjs.com/package/mustache) library was used to handle variables injection and compile templates. So if you want to have something specific around templates, you can refer to this library documentation to get more information about templating.
+
+After adding your own template, just specify it in the config file to compile a new page with this template.
 
 
-# How to improve default pages
+### Styles
 
-* *Extensibility* New pages can be added by adding new json files in `scr/<locale>` directory. The page name must follow to format `<HTTP code>.json` (`<HTTP code>` is Number, related to specific HTTP status code). You can put any additional data to json files that you want to display on a page. In case of common variables, you can use the`common.json` file to define them.
-* *Customization* By editing the default theme you can add anything you want. In case if you want to have your own page design, you can create a new theme and apply it by editing `config.json` file. All assets (images, fonts, etc) must be placed in the `@assets` directory (note: the `@assets` name is used to avoid a naming collision with default assets directory name in common cases). By default the [mustache.js](https://www.npmjs.com/package/mustache) is used as a template engine and [Tailwind](https://tailwindcss.com/) as a CSS framework. Entry point of Tailwind styles must be located in `themes/<name>/@assets/css/main.twnd.css` file. Custom Tailwind theme settings can be added to the `theme.tailwind.config.js` file located in the root of the theme directory. If you don't want to use Tailwind builder, then it can be disabled by editing the `tailwind` option in `config.js`.
-* *Localization* If you need to change default text messages, then you can simply edit existing files in`src/<locale>` directory according to your needs. If you want to create your own localization, just simply add a new locale directory and create a set of source files. After new locale adding, change `locale` property in `config.json` file, located in a root.
+Templates styling is based on the [Tailwind CSS](https://tailwindcss.com/) framework. With this framework you can quickly create page styles without writing separate CSS code. The entry point of Tailwind styles must be located in the `themes/<name>/@assets/css/main.twnd.css` file. From this point will be created the `main.css` file with compiled and minified styles. In addition, you can tune the Tailwind by creating a custom `theme.tailwind.config.js` file located in the root of your theme directory and adding to it any Tailwind options, which you want. Full list of Tailwind options you can find in Tailwind [documentation](https://tailwindcss.com/docs/configuration).
+
+However, if you don’t want to use Tailwind and prefer to use already existing CSS styles, you can disable Tailwind in the main configuration (`config.json` file). In this case, the Tailwind Build step will be just skipped without any side effects on results.
 
 
-# Contributing
+### Text Messages and Localization
 
-You are very welcome to contribute to this project with improvements, localizations, bug fixes and so on.
+All text messages are stored in JSON files, splitted by languages, which are placed in the `src` directory. Each page will be created from its locale file `<HTTP code>.json` (`<HTTP code>` is a number, related to specific HTTP status code). So if you want to create a page for the non-existing status code, then just create a JSON file with this status description.
+
+Every locale file can be extended with any number of variables that you want to display on a page. To define common variables, you can use the `common.json` file — variables from this file will be applied to every page.
+
+To localize your pages, just create a new directory in the `src` with any pages you want to generate. You are able to choose any set of HTTP status codes (for example, only for the 4xx errors), just follow the naming convention and don’t forget to extract common messages to the `common.json` file of your locale.
+
+
+### Server Configurations
+
+During the build process, the Tool will automatically create a config snippet for your server. This snippet will contain information about handled errors and locations to reach the pages that represent them. At the moment, the only Nginx server supported.
+
+You just need to copy all files from the `dist` directory to your server and apply automatically created config snippet to existing server configuration. According to the snippet template, all pages must be located in the `/usr/share/nginx/html/error-pages` directory. In case if you want to change something in a snippet, you can edit the template in the `snippets` directory. Same as for the page templates, these templates support the mustache.js engine, so you can use any render logic you want (lists, conditions, etc).
+
+The config snippet itself I would recommend to place in the `/etc/nginx/snippets/` directory and use the following line to include it to your configuration: `include /etc/nginx/snippets/nginx-error-pages.conf;`.
+
+Here is an example of web server configuration with included the error pages snippet:
+
+```
+server {
+  server_name example.com;
+  access_log /var/log/nginx/example.access.log;
+  include /etc/nginx/snippets/nginx-error-pages.conf;
+
+  location / {
+    root /data/www;
+  }
+}
+```
+
+
+## Contributing
+
+This project is open to contributions and if you have any ideas and wish to realize them, then add Pull Request to discuss your idea solution. I will provide you with full support during this process. Don’t hesitate to ask me about code and solutions of your ideas.
