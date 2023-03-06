@@ -85,7 +85,8 @@ In addition to steps from Basic Usage, you can improve results by changing some 
 
 The main configuration is stored in the `config.json` file in a root directory and you can change this config file according to your needs:
 
-```{
+```
+{
   "tailwind": true,
   "theme": "minimalistic",
   "locale": "en"
