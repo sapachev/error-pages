@@ -14,6 +14,7 @@ Lightweight tool to create static custom HTTP Error Pages in minimalistic adapti
 * Customization
 * Localization (i18n)
 * Accessibility (a11y)
+* Automated typography support
 * Built-in web server config generator (Nginx)
 
 
@@ -115,12 +116,14 @@ Every locale file can be extended with any number of variables that you want to 
 
 To localize your pages, just create a new directory in the `src` with any pages you want to generate. You are able to choose any set of HTTP status codes (for example, only for the 4xx errors), just follow the naming convention and don’t forget to extract common messages to the `common.json` file of your locale.
 
+All texts are processing with [Typograf](https://github.com/typograf/typograf) library by default. This works automatically, so you don't need to adapt texts in the source directory. In case of new locale adding, please check a list of [supported locales](https://github.com/typograf/typograf/blob/dev/docs/LOCALES.en-US.md) and update locales mapping in `TYPOGRAF_LOCALES` constant.
+
 
 ### Server Configurations
 
 During the build process, the Tool will automatically create a config snippet for your server. This snippet will contain information about handled errors and locations to reach the pages that represent them. At the moment, the only Nginx server supported.
 
-You just need to copy all files from the `dist` directory to your server and apply automatically created config snippet to existing server configuration. According to the snippet template, all pages must be located in the `/usr/share/nginx/html/error-pages` directory. In case if you want to change something in a snippet, you can edit the template in the `snippets` directory. Same as for the page templates, these templates support the mustache.js engine, so you can use any render logic you want (lists, conditions, etc).
+You just need to copy all files from the `dist` directory to your server and apply automatically created config snippet to existing server configuration. According to the snippet template, all pages must be located in the `/usr/share/nginx/html/error-pages` directory. In case if you want to change something in a snippet, you can edit the template in the `snippets` directory. Same as for the page templates, these templates support the mustache.js engine, so you can use any render logic you want (lists, conditions, loops, etc).
 
 The config snippet itself I would recommend to place in the `/etc/nginx/snippets/` directory and use the following line to include it to your configuration: `include /etc/nginx/snippets/nginx-error-pages.conf;`.
 

@@ -6,7 +6,7 @@ import { ILogger } from "./Logger";
 import { Messages } from "./Messages";
 import { Renderer } from "./Renderer";
 
-import { Config, TemplateVariables } from "../interfaces";
+import { Config, SnippetVariables, TemplateVariables } from "../interfaces";
 import { DI_TOKENS } from "../tokens";
 import { MessagesEnum } from "../../messages";
 import { PathRegistry } from "./PathRegistry";
@@ -102,7 +102,7 @@ export class Compiler implements ICompiler {
 
           this.logger.print(Messages.list(path));
 
-          await this.fsHelper.writeFile(path, Renderer.renderTemplate(template, { codes: Array.from(list) }));
+          await this.fsHelper.writeFile(path, Renderer.renderSnippet(template, { codes: Array.from(list) } as SnippetVariables));
         })
       );
     } else {

@@ -14,3 +14,10 @@ export const DEFAULTS: Defaults = {
 };
 
 export const MANDATORY_CONFIG_PROPS = ["locale", "theme", "tailwind"];
+
+// Mapping between locales supported by the Typograf and this tool src locales
+export const TYPOGRAF_LOCALES = new Map([
+  ["de", "de"],
+  ["en", "en-US"],
+  ["ru", "ru"],
+]);
