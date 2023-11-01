@@ -14,8 +14,7 @@
     "check": "npm run build && npm run lint && npm run coverage:lcov",
     "coverage:html": "nyc --reporter=html npm run test",
     "coverage:lcov": "nyc --reporter=lcov npm run test",
-    "dev": "npx ts-node dev/server.ts",
-    "live-dev": "npx ts-node live-dev.ts"
+    "dev": "npx ts-node dev/server.ts"
   },
   "author": "Pavel Sapachev",
   "repository": "https://github.com/sapachev/error-pages",
