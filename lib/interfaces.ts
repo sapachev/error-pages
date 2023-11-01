@@ -2,6 +2,7 @@ export type Config = {
   locale: string;
   tailwind: boolean;
   theme: string;
+  devCode: number;
 };
 
 export interface Defaults {
