@@ -85,8 +85,7 @@ fsHelper.readConfig(pr.get("config")).then(async (config) => {
     } else if (STATUS_PATH_REGEX.test(ctx.path)) {
       // Read template if path looks like status path
       try {
-        let template = await fsHelper.readFile(pr.join("theme", "template.html"));
-        ctx.body = template;
+        ctx.body = await fsHelper.readFile(pr.join("theme", "template.html"));
         return next();
       } catch (_) {
         ctx.status = 500;
@@ -128,6 +127,7 @@ fsHelper.readConfig(pr.get("config")).then(async (config) => {
         };
 
         if (await fsHelper.ensure(pr.get("themeConfig"))) {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
           const tailwindConfig = require(pr.get("themeConfig"));
           devVars["head-injection"] += `<script>tailwind.config = ${JSON.stringify(tailwindConfig)};</script>`;
         }
