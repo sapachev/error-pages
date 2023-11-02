@@ -18,6 +18,8 @@ import { DEFAULTS } from "../lib/constants";
 import { Config, TemplateVariables } from "../lib/interfaces";
 import { DI_TOKENS } from "../lib/tokens";
 
+const STATUS_PATH_REGEX = /^\/([0-9]{3})$/i;
+
 const runContainer = initContainer();
 
 const fsHelper = runContainer.get<IFileSystemHelper>(DI_TOKENS.FS_HELPER);
@@ -33,15 +35,20 @@ fsHelper.readConfig(pr.get("config")).then(async (config) => {
     themeCss: `${DEFAULTS.THEMES}/${config.theme}/@assets/css/main.twnd.css`,
   });
 
+  const compiler = runContainer.get<ICompiler>(DI_TOKENS.COMPILER);
+  const statusList = await compiler.getStatusList();
+
   // Server setup
   const app = new Koa();
 
   const watcher = chokidar.watch([`${pr.get("src")}/**`, `${pr.get("theme")}/**`], {
     persistent: true,
+    interval: 300,
   });
 
   // Hot-reload feature over Server-sent events (SSE)
   app.use((ctx, next) => {
+    console.log(`requested ${ctx.path}`);
     if ("/events" == ctx.path) {
       ctx.set({
         "Content-Type": "text/event-stream",
@@ -53,10 +60,11 @@ fsHelper.readConfig(pr.get("config")).then(async (config) => {
       const stream = new Stream.PassThrough();
       ctx.body = stream;
 
-      stream.write("data: init\n\n");
+      stream.write(`data: init\n\n`);
 
       const sseHandler = (path) => {
-        stream.write("data: reload (" + path + ")\n\n");
+        stream.write(`data: reload\n\n`);
+        console.log(`hot-reload on ${path}`);
       };
 
       watcher.on("add", sseHandler).on("change", sseHandler).on("unlink", sseHandler).on("addDir", sseHandler).on("unlinkDir", sseHandler);
@@ -69,9 +77,13 @@ fsHelper.readConfig(pr.get("config")).then(async (config) => {
     }
   });
 
-  // Read template in a root
+  // URL processor
   app.use(async (ctx, next) => {
-    if ("/" == ctx.path) {
+    if (ctx.path === "/") {
+      // Redirect to first status in a list
+      ctx.redirect(`/${[...statusList][0]}`);
+    } else if (STATUS_PATH_REGEX.test(ctx.path)) {
+      // Read template if path looks like status path
       try {
         let template = await fsHelper.readFile(pr.join("theme", "template.html"));
         ctx.body = template;
@@ -81,6 +93,7 @@ fsHelper.readConfig(pr.get("config")).then(async (config) => {
         ctx.body = Messages.text(MessagesEnum.NO_TEMPLATE_CONTENT);
       }
     } else {
+      // Overwise return status 301
       ctx.status = 301;
     }
   });
@@ -98,12 +111,16 @@ fsHelper.readConfig(pr.get("config")).then(async (config) => {
   // Render variables in template
   app.use(async (ctx, next) => {
     if (ctx.body) {
-      const compiler = runContainer.get<ICompiler>(DI_TOKENS.COMPILER);
-
       try {
+        const matches = ctx.path.match(STATUS_PATH_REGEX);
+        const code = Number(matches[1]);
+        if (!statusList.has(code)) {
+          throw new Error(`No source file with status code #${code}`);
+        }
+
         const initVars = await compiler.initTemplateVariables();
         const commonVars = await fsHelper.readJson<TemplateVariables>(pr.join("src", "common.json"));
-        const statusVars = await fsHelper.readJson<TemplateVariables>(pr.join("src", `${config.devCode}.json`));
+        const statusVars = await fsHelper.readJson<TemplateVariables>(pr.join("src", `${code}.json`));
 
         const devVars = {
           "head-injection": `<script src="https://cdn.tailwindcss.com/3.2.4"></script>`,
@@ -120,12 +137,12 @@ fsHelper.readConfig(pr.get("config")).then(async (config) => {
           devVars["head-injection"] += `<style type="text/tailwindcss">${mainCss}</style>`;
         }
 
-        ctx.body = Renderer.renderTemplate(ctx.body, { ...initVars, ...commonVars, ...statusVars, ...devVars, code: config.devCode });
+        ctx.body = Renderer.renderTemplate(ctx.body, { ...initVars, ...commonVars, ...statusVars, ...devVars, code });
 
         await next();
       } catch (err) {
         ctx.status = 500;
-        ctx.body = err;
+        ctx.body = err.message;
       }
     } else {
       ctx.status = 204;
@@ -134,5 +151,5 @@ fsHelper.readConfig(pr.get("config")).then(async (config) => {
 
   const port = 8080;
   app.listen(port);
-  console.log(`Dev server started on port ${port}`);
+  console.log(`hot-reload server was started on port ${port}`);
 });

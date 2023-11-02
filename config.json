@@ -1,6 +1,5 @@
 {
   "tailwind": true,
   "theme": "minimalistic",
-  "locale": "en",
-  "devCode": 403
+  "locale": "en"
 }
