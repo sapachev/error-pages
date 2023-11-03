@@ -122,19 +122,23 @@ fsHelper.readConfig(pr.get("config")).then(async (config) => {
         const statusVars = await fsHelper.readJson<TemplateVariables>(pr.join("src", `${code}.json`));
 
         const devVars = {
-          "head-injection": `<script src="https://cdn.tailwindcss.com/3.2.4"></script>`,
+          "head-injection": "",
           "body-injection": readFileSync("./dev/sse.html").toString(),
         };
 
-        if (await fsHelper.ensure(pr.get("themeConfig"))) {
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
-          const tailwindConfig = require(pr.get("themeConfig"));
-          devVars["head-injection"] += `<script>tailwind.config = ${JSON.stringify(tailwindConfig)};</script>`;
-        }
+        if (config.tailwind) {
+          devVars["head-injection"] += `<script src="https://cdn.tailwindcss.com/3.2.4"></script>`;
 
-        if (await fsHelper.ensure(pr.get("themeCss"))) {
-          const mainCss = await fsHelper.readFile(pr.get("themeCss"));
-          devVars["head-injection"] += `<style type="text/tailwindcss">${mainCss}</style>`;
+          if (await fsHelper.ensure(pr.get("themeConfig"))) {
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const tailwindConfig = require(pr.get("themeConfig"));
+            devVars["head-injection"] += `<script>tailwind.config = ${JSON.stringify(tailwindConfig)};</script>`;
+          }
+
+          if (await fsHelper.ensure(pr.get("themeCss"))) {
+            const mainCss = await fsHelper.readFile(pr.get("themeCss"));
+            devVars["head-injection"] += `<style type="text/tailwindcss">${mainCss}</style>`;
+          }
         }
 
         ctx.body = Renderer.renderTemplate(ctx.body, { ...initVars, ...commonVars, ...statusVars, ...devVars, code });
