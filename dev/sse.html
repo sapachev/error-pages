@@ -1,0 +1,9 @@
+<script type="text/javascript">
+  const src = new EventSource("/events");
+
+  src.onmessage = (event) => {
+    if (event.data.indexOf("reload") !== -1) {
+      window.location.reload();
+    }
+  };
+</script>

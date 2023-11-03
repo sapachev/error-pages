@@ -1,6 +1,6 @@
 {
   "name": "error-pages",
-  "version": "1.9.1",
+  "version": "1.10.0",
   "description": "Lightweight tool to create static HTTP Error Pages in minimalistic adaptive and accessible design with customization and localization support",
   "main": "index.ts",
   "scripts": {
@@ -13,7 +13,8 @@
     "test": "mocha -r ts-node/register 'test/**/*.ts'",
     "check": "npm run build && npm run lint && npm run coverage:lcov",
     "coverage:html": "nyc --reporter=html npm run test",
-    "coverage:lcov": "nyc --reporter=lcov npm run test"
+    "coverage:lcov": "nyc --reporter=lcov npm run test",
+    "dev": "npx ts-node dev/server.ts"
   },
   "author": "Pavel Sapachev",
   "repository": "https://github.com/sapachev/error-pages",
@@ -37,9 +38,12 @@
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
     "chai": "^4.3.7",
+    "chokidar": "^3.5.3",
     "coveralls": "^3.1.1",
     "eslint": "^8.32.0",
     "husky": "^8.0.0",
+    "koa": "^2.14.2",
+    "koa-sse-stream": "^0.2.0",
     "lint-staged": "^13.1.0",
     "mocha": "^10.2.0",
     "nyc": "^15.1.0",
