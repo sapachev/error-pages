@@ -7,7 +7,7 @@ import { Main } from "./lib/classes/Main";
 import { initContainer } from "./container";
 import { pr } from "./path-registry";
 
-import { Config } from "./lib/interfaces";
+import { Config } from "./lib/models";
 import { Messages } from "./lib/classes/Messages";
 import { MessagesEnum } from "./messages";
 

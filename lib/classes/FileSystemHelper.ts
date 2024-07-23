@@ -1,6 +1,6 @@
 import { injectable, inject } from "inversify";
 
-import { Config } from "../interfaces";
+import { Config } from "../models";
 import { Messages } from "./Messages";
 import { Styler } from "./Styler";
 import { ILogger } from "./Logger";

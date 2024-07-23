@@ -7,7 +7,7 @@ import { IStyler } from "./Styler";
 import { Messages } from "./Messages";
 import { PathRegistry } from "./PathRegistry";
 
-import { Config } from "../interfaces";
+import { Config } from "../models";
 import { DI_TOKENS } from "../tokens";
 import { MessagesEnum } from "../../messages";
 
@@ -22,7 +22,7 @@ export class Main {
     @inject(DI_TOKENS.PATH) private pr: PathRegistry
   ) {}
 
-  async start() {
+  async start(): Promise<void> {
     const startTime = Date.now();
 
     this.logger.print(Messages.info(MessagesEnum.START));

@@ -1,7 +1,7 @@
 import { assert } from "chai";
 
 import { Renderer } from "../lib/classes/Renderer";
-import { SnippetVariables, TemplateVariables } from "../lib/interfaces";
+import { SnippetVariables, TemplateVariables } from "../lib/models";
 
 describe("class Renderer", () => {
   describe("renderTemplate()", () => {

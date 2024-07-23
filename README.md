@@ -86,7 +86,7 @@ In addition to steps from Basic Usage, you can improve results by changing some 
 
 The main configuration is stored in the `config.json` file in a root directory and you can change this config file according to your needs:
 
-```
+```json
 {
   "tailwind": true,
   "theme": "minimalistic",
@@ -94,7 +94,7 @@ The main configuration is stored in the `config.json` file in a root directory a
 }
 ```
 
-There possible to run hot-reload server to develop your own theme with custom markup, styles, and scripts. To start dev-server just run command `npm run dev`. This command will start server on 8080 port ([http://localhost:8080](http://localhost:8080). By default, this address will be opened with a first status code, defined in `src` directory, which corresponds to configured `locale` value. You can choose any other code to continue specific page development. Don't be surprised with injected parts of code in a rendered page, because this is a part of hot-reload mode. Any change of the main configuration will require dev-server restart. The only configured theme and locale directories are watching during development.
+There possible to run hot-reload server to develop your own theme with custom markup, styles, and scripts. To start dev-server just run command `npm run dev`. This command will start server on 8080 port ([http://localhost:8080](http://localhost:8080)). By default, this address will be opened with a first status code, defined in `src` directory, which corresponds to configured `locale` value. You can choose any other code to continue specific page development. Don't be surprised with injected parts of code in a rendered page, because this is a part of hot-reload mode. Any change of the main configuration will require dev-server restart. The only configured theme and locale directories are watching during development.
 
 
 ### Templates
@@ -132,7 +132,7 @@ The config snippet itself I would recommend to place in the `/etc/nginx/snippets
 
 Here is an example of web server configuration with included the error pages snippet:
 
-```
+```nginx
 server {
   server_name example.com;
   access_log /var/log/nginx/example.access.log;

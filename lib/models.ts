@@ -4,7 +4,7 @@ export type Config = {
   theme: string;
 };
 
-export interface Defaults {
+export type Defaults = {
   ASSETS: string;
   CONFIG: string;
   DIST: string;
@@ -14,17 +14,17 @@ export interface Defaults {
   TAILWIND_IN: string;
   TAILWIND_OUT: string;
   THEMES: string;
-}
+};
 
-export interface AnyVariables {
+export type AnyVariables = {
   [key: string]: string | number;
-}
+};
 
-export interface TemplateVariables extends AnyVariables {
+export type TemplateVariables = {
   locale: string;
   version: string;
-}
+} & AnyVariables;
 
-export interface SnippetVariables {
+export type SnippetVariables = {
   codes: number[];
-}
+};

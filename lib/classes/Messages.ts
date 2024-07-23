@@ -1,6 +1,6 @@
 import { render } from "mustache";
 
-import { AnyVariables } from "../interfaces";
+import { AnyVariables } from "../models";
 
 export class Messages {
   static error(msg: string, vars: AnyVariables = {}): string {

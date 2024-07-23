@@ -6,7 +6,7 @@ export interface ILogger {
 
 @injectable()
 export class Logger implements ILogger {
-  print(message: string) {
+  print(message: string): void {
     console.log(message);
   }
 }

@@ -6,7 +6,7 @@ import { ILogger } from "./Logger";
 import { Messages } from "./Messages";
 import { Renderer } from "./Renderer";
 
-import { Config, SnippetVariables, TemplateVariables } from "../interfaces";
+import { Config, SnippetVariables, TemplateVariables } from "../models";
 import { DI_TOKENS } from "../tokens";
 import { MessagesEnum } from "../../messages";
 import { PathRegistry } from "./PathRegistry";

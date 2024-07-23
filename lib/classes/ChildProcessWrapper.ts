@@ -8,7 +8,7 @@ export interface IChildProcessWrapper {
 
 @injectable()
 export class ChildProcessWrapper implements IChildProcessWrapper {
-  exec(cmd: string) {
+  exec(cmd: string): Promise<{ stdout: string; stderr: string }> {
     return promisify(exec)(cmd);
   }
 }

@@ -20,7 +20,7 @@ export class Styler implements IStyler {
     @inject(DI_TOKENS.LOGGER) private logger: ILogger
   ) {}
 
-  async buildTailwind(input: string, output: string) {
+  async buildTailwind(input: string, output: string): Promise<void> {
     const cmd = Styler.getTailwindCommand(input, output);
 
     this.logger.print(Messages.info(MessagesEnum.TAILWIND_START));
@@ -30,7 +30,7 @@ export class Styler implements IStyler {
     this.logger.print(Messages.info(MessagesEnum.TAILWIND_DONE));
   }
 
-  static getTailwindCommand(input: string, output: string) {
+  static getTailwindCommand(input: string, output: string): string {
     return `INPUT="${input}" OUTPUT="${output}" npm run build:tailwind`;
   }
 

@@ -12,7 +12,7 @@ export class PathRegistry {
     this.init(paths);
   }
 
-  private init(paths: AnyStringObject) {
+  private init(paths: AnyStringObject): void {
     this.registry = new Map(
       Object.entries(paths).map(([key, value]) => {
         return [key, this.resolveToCwd(value)];
