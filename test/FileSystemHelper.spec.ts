@@ -8,7 +8,7 @@ import { IFileSystemWrapper, MockFS } from "../lib/classes/FileSystemWrapper";
 import { ILogger, MockLogger } from "../lib/classes/Logger";
 import { Messages } from "../lib/classes/Messages";
 
-import { Config } from "../lib/interfaces";
+import { Config } from "../lib/models";
 import { DI_TOKENS } from "../lib/tokens";
 import { MessagesEnum } from "../messages";
 import { PathRegistry } from "../lib/classes/PathRegistry";

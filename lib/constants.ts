@@ -1,4 +1,4 @@
-import { Defaults } from "./interfaces.js";
+import { Defaults } from "./models.js";
 import { DefaultPaths } from "./_constants.js";
 
 export const DEFAULTS: Defaults = {

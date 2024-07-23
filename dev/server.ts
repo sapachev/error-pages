@@ -15,7 +15,7 @@ import { MessagesEnum } from "../messages";
 import { pr } from "../path-registry";
 
 import { DEFAULTS } from "../lib/constants";
-import { Config, TemplateVariables } from "../lib/interfaces";
+import { Config, TemplateVariables } from "../lib/models";
 import { DI_TOKENS } from "../lib/tokens";
 
 const STATUS_PATH_REGEX = /^\/([0-9]{3})$/i;
