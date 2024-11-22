@@ -36,7 +36,7 @@ A lightweight tool for creating static custom HTTP error pages featuring a minim
 If you would like to obtain precompiled packages, please download the latest version from the [official website](https://sapachev.github.io/error-pages/#precompiled-packages).
 
 The installation steps are following:
-1. Download the [package](https://sapachev.github.io/error-pages/#precompiled-packages) and extract the files and follow to the `dist` directory
+1. Download the [package](https://sapachev.github.io/error-pages/#precompiled-packages) and extract the files, and navigate to the `dist` directory
 2. Copy static HTML files and the `@assets` directory to the new `/usr/share/nginx/html/error-pages/` directory of your server
 3. Copy the `nginx-error-pages.conf` file to the existing `/etc/nginx/snippets/` directory and apply this snippet to your web server configuration using the following line: `include /etc/nginx/snippets/nginx-error-pages.conf;` (for detailed information, refer to the [Server Configurations](#server-configurations) section)
 
