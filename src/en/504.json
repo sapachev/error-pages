@@ -1,4 +1,4 @@
 {
   "name": "Gateway Timeout",
-  "message": "The server is configured as a gateway or proxy server, and it is not receiving a response from the backend servers within the allowed time period. Try to get this page later."
+  "message": "The server is configured as a gateway or proxy server and is not receiving a response from the backend servers within the designated time frame. Please try accessing this page again later."
 }

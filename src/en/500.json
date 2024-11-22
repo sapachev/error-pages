@@ -1,4 +1,4 @@
 {
   "name": "Internal Server Error",
-  "message": "An unexpected error happened during process your request or it is an incorrect server configuration. Try to get this page later."
+  "message": "An unexpected error occurred while processing your request, possibly due to an incorrect server configuration. Please try accessing this page again later."
 }
