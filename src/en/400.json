@@ -1,4 +1,4 @@
 {
   "name": "Bad Request",
-  "message": "The server can not process the bad syntax request due to a client error."
+  "message": "The server cannot process the request due to a client error caused by bad syntax."
 }

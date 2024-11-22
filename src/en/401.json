@@ -1,4 +1,4 @@
 {
   "name": "Unauthorized",
-  "message": "The request has not been applied because it lacks valid authentication credentials for the target resource."
+  "message": "The request could not be processed because it lacks valid authentication credentials for the target resource."
 }

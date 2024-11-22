@@ -1,4 +1,4 @@
 {
   "name": "Service Unavailable",
-  "message": "The server is overloaded or under maintenance, and can not process you request. Try to get this page later."
+  "message": "The server is either overloaded or undergoing maintenance and cannot process your request. Please try accessing this page again later."
 }
