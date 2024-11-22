@@ -94,7 +94,7 @@ The main configuration is stored in the `config.json` file located in the root d
 }
 ```
 
-It is possible to run a hot-reload server to develop your own theme with custom markup, styles, and scripts. To start the development server, simply run the command `npm run dev`. This command will launch the server on 8080 port: ([http://localhost:8080](http://localhost:8080)). By default, this address will be opened with a first status code defined in the `src` directory, which corresponds to the configured `locale` value. You can choose any other code to continue developing a specific page. Don't be surprised by the injected code segments in a rendered page, as this is a feature of hot-reload mode. Any modifications to the main configuration will require a restart of the development server. During development, only the configured theme and locale directories are beign monitored.
+It is possible to run a hot-reload server to develop your own theme with custom markup, styles, and scripts. To start the development server, simply run the command `npm run dev`. This command will launch the local server on 8080 port ([http://localhost:8080](http://localhost:8080)). By default, this address will be opened with a first status code defined in the `src` directory, which corresponds to the configured `locale` value. You can choose any other code to continue developing a specific page. Don't be surprised by the injected code segments in a rendered page, as this is a feature of hot-reload mode. Any modifications to the main configuration will require a restart of the development server. During development, only the configured theme and locale directories are beign monitored.
 
 
 ### Templates
