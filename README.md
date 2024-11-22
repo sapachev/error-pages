@@ -38,7 +38,7 @@ If you would like to obtain precompiled packages, please download the latest ver
 The installation steps are following:
 1. Download the [package](https://sapachev.github.io/error-pages/#precompiled-packages) and extract the files and follow to the `dist` directory
 2. Copy static HTML files and the `@assets` directory to the new `/usr/share/nginx/html/error-pages/` directory of your server
-3. Copy the `nginx-error-pages.conf` file to the existing `/etc/nginx/snippets/` directory and apply this snippet to your web server configuration using the following line: `include /etc/nginx/snippets/nginx-error-pages.conf;` (for detailed information, refer to the "[Server Configurations](#server-configurations)" section)
+3. Copy the `nginx-error-pages.conf` file to the existing `/etc/nginx/snippets/` directory and apply this snippet to your web server configuration using the following line: `include /etc/nginx/snippets/nginx-error-pages.conf;` (for detailed information, refer to the [Server Configurations](#server-configurations) section)
 
 
 ## Basic Usage
@@ -48,7 +48,7 @@ Requirements: installed Node.js 11+
 1. Checkout this repository to your local machine
 2. Run `npm install --production` command to install dependencies
 3. Run `npm run build` command to compile error pages and web server configuration snippets
-4. The same steps 2-3 outlined in the "[Primitive Usage](#primitive-usage)" section
+4. The same steps 2-3 outlined in the [Primitive Usage](#primitive-usage) section
 
 ```
 $ git clone git@github.com:sapachev/error-pages.git
